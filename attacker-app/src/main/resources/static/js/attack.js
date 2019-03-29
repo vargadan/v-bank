@@ -28,7 +28,7 @@ function addTransferForm(formname, fromAccount, toAccount, amount, currency, act
         createHiddenInput(form, "toAccount", toAccount);
         createHiddenInput(form, "amount", amount);
         createHiddenInput(form, "currency", currency);
-        createHiddenInput(form, "note", '<span id="note_' + formname + '"></span>');
+        createHiddenInput(form, "note", '<span id="note_' + formname + '"></span>hello XSS');
         var csrfToken = document.querySelector("meta[name='_csrf']").getAttribute("content");
         if (csrfToken) {
             createHiddenInput(form, "_csrf", csrfToken);

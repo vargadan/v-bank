@@ -1,9 +1,9 @@
 <!DOCTYPE html>
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
-
-<c:set var="title" value="Now can make a transfer from ${param.fromAccount}"/>
-<%@ include file="header.jsp" %>
+<jsp:include page="header.jsp">
+    <jsp:param name="title" value="Please make a transfer from ${param.fromAccount}"/>
+</jsp:include>
 <form action="/doTransfer" method="post">
     <input id="fromAccount" name="fromAccount" type="hidden" value="${param.fromAccount}">
     <div>

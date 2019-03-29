@@ -2,8 +2,9 @@
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <html lang="en">
-<c:set var="title" value="Here are you accounts"/>
-<%@ include file="header.jsp" %>
+<jsp:include page="header.jsp">
+    <jsp:param name="title" value="Here are you accounts, ${username}"/>
+</jsp:include>
 <script type="text/javascript" src="/js/jquery-3.3.1.js"></script>
 <script type="text/javascript">
     function addAccountRow(accountId) {

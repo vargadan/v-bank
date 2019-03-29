@@ -2,8 +2,9 @@
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <html lang='en'>
-<c:set var="title" value="Please log in."/>
-<%@ include file="header.jsp" %>
+<jsp:include page="header.jsp">
+    <jsp:param name="title" value="Please log in."/>
+</jsp:include>
 <c:if test="${param.error != null}">
     <div>Invalid username and password.</div>
 </c:if>
