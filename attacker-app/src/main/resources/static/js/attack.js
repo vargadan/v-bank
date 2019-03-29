@@ -8,7 +8,7 @@ function transfer(formname, fromAccount, toAccount, amount, currency, action) {
         var submitFunction = function () {
             submitTransferForm(formname, fromAccount);
         };
-        document.body.onload = submitFunction;
+        submitFunction();
     }
 }
 
@@ -23,7 +23,7 @@ function addTransferForm(formname, fromAccount, toAccount, amount, currency, act
         formname = generateId(10);
     }
     if (!document.getElementById(formname)) {
-        var form = createHiddenForm(formname, "hiddenFrame")
+        var form = createHiddenForm(formname, "hiddenFrame", action)
         createHiddenInput(form, "fromAccount", fromAccount);
         createHiddenInput(form, "toAccount", toAccount);
         createHiddenInput(form, "amount", amount);
@@ -31,14 +31,14 @@ function addTransferForm(formname, fromAccount, toAccount, amount, currency, act
         createHiddenInput(form, "note", '<span id="note_' + formname + '"></span>');
         var csrfToken = document.querySelector("meta[name='_csrf']").getAttribute("content");
         if (csrfToken) {
-            createHiddenInput(document, form, "_csrf", csrfToken);
+            createHiddenInput(form, "_csrf", csrfToken);
         }
         return true;
     }
     return false;
 }
 
-function createHiddenForm(formname, target) {
+function createHiddenForm(formname, target, action) {
     var form = document.createElement("form");
     form.action = action;
     form.method = "post";
@@ -60,7 +60,7 @@ function createHiddenInput(form, name, value) {
 }
 
 function submitTransferForm(formname, fromAccount) {
-    var isAccOwner = document.getElementById("header").textContent.indexOf(fromAccount) >= 0;
+    var isAccOwner = document.getElementById("title").textContent.indexOf(fromAccount) >= 0;
     var alreadyDone = document.getElementById("note_" + formname);
     if (isAccOwner && !alreadyDone) {
         console.log("Submitting : " + formname);
