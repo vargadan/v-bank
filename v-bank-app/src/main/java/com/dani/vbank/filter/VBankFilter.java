@@ -13,7 +13,7 @@ public class VBankFilter implements Filter {
     @Override
     public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException, ServletException {
         String username = ((HttpServletRequest) request).getRemoteUser();
-        if (StringUtils.isEmpty(username)) {
+        if (!StringUtils.isEmpty(username)) {
             request.setAttribute("username", username);
         }
         chain.doFilter(request, response);
