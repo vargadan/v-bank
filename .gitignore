@@ -1,0 +1,7 @@
+.idea
+attacker-app/target
+attacker-app/bin
+v-bank-app/target
+v-bank-app/bin
+*/.project
+*/.classpath
