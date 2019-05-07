@@ -35,4 +35,5 @@
     </c:forEach>
     </tbody>
 </table>
+<a href="/">back</a>
 </t:page>

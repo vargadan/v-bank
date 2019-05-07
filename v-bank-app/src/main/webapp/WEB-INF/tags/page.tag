@@ -12,7 +12,13 @@
       <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous" />
       <link rel="stylesheet" href="/css/styles.css" />
       <script type="text/javascript" src="/js/jquery-3.3.1.js"></script>
- </head>
+</head>
+    <c:if test="${not empty param.info}" >
+        <c:set var="info" value="${param.info}" />
+    </c:if>
+    <c:if test="${not empty param.error}" >
+        <c:set var="error" value="${param.error}" />
+    </c:if>
 <html>
     <body onload="${onload}">
         <div class="container-fluid">
@@ -33,6 +39,16 @@
         <c:if test="${not empty SPRING_SECURITY_LAST_EXCEPTION}">
             <div class="container">
                 <div class="row alert alert-danger" role="alert"><c:out value="${SPRING_SECURITY_LAST_EXCEPTION.message}"/></div>
+            </div>
+        </c:if>
+        <c:if test="${not empty error}">
+            <div class="container">
+                <div class="row alert alert-danger" role="alert"><c:out value="${error}"/></div>
+            </div>
+        </c:if>
+        <c:if test="${not empty info}">
+            <div class="container">
+                <div class="row alert alert-info" role="alert"><c:out value="${info}"/></div>
             </div>
         </c:if>
         <div id="body" class="container">

@@ -60,19 +60,27 @@ public class BankController {
     public ModelAndView doTransfer(@ModelAttribute Transaction transaction, ModelMap model) {
         if (accountService.transfer(transaction.getFromAccountNo(), transaction.getToAccountNo(), transaction.getAmount(),
                 transaction.getCurrency(), transaction.getNote())) {
-            model.addAttribute("message", "Transaction was completed.");
+            model.addAttribute("info", "Transaction was completed.");
         } else {
-            model.addAttribute("message", "Transaction is pending.");
+            model.addAttribute("info", "Transaction is pending.");
         }
         return new ModelAndView("redirect:/", model);
     }
 
     @PostMapping("/uploadTransactions")
     public ModelAndView uploadTransactions(@ModelAttribute MultipartFile file, ModelMap model) throws Exception {
+        if (file == null || file.isEmpty()) {
+            model.addAttribute("error", "File is missing.");
+            return new ModelAndView("redirect:/", model);
+        }
         JAXBContext context = JAXBContext.newInstance(Transactions.class, Transaction.class);
         Transactions transactions = (Transactions) context.createUnmarshaller()
                 .unmarshal(file.getInputStream());
-        transactions.getTransactions().forEach(transaction -> doTransfer(transaction, model));
+        if (!transactions.getTransactions().isEmpty()) {
+            transactions.getTransactions().forEach(transaction -> doTransfer(transaction, model));
+            int size = transactions.getTransactions().size();
+            model.addAttribute("info", size + " transactions uploaded.");
+        }
         return new ModelAndView("redirect:/history", model);
     }
 
