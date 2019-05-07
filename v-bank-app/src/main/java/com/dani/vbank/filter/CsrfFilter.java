@@ -1,4 +1,4 @@
-package com.dani.vbank;
+package com.dani.vbank.filter;
 
 import org.springframework.core.annotation.Order;
 import org.springframework.stereotype.Component;
@@ -9,7 +9,7 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.UUID;
 
-//@Component
+@Component
 @Order(1)
 public class CsrfFilter implements Filter {
 
