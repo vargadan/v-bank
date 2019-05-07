@@ -1,6 +1,6 @@
 package com.dani.vbank.controller;
 
-import com.dani.vbank.service.impl.AccountServiceSQLImpl;
+import com.dani.vbank.service.impl.JDBCAccountService;
 import com.dani.vbank.model.AccountDetails;
 import com.dani.vbank.model.Transaction;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,7 +13,7 @@ import java.util.List;
 public class AccountServiceResource {
 
     @Autowired
-    private AccountServiceSQLImpl delegate;
+    private JDBCAccountService delegate;
 
     @Autowired
     private DataGenerator generator;
@@ -23,16 +23,6 @@ public class AccountServiceResource {
         AccountDetails details = delegate.getAccountDetails(accountId);
         return details;
     }
-
-//    @RequestMapping(path = "/account/{accountId}", produces = "application/pdf")
-//    @SneakyThrows
-//    public @ResponseBody byte[] getAccountDetailsPdf(@PathVariable("accountId") String accountId) {
-//        JasperPrint print = JasperFillManager.fillReport(this.getClass().getClassLoader()
-//                        .getResourceAsStream("account_details.jasper"),
-//                new HashMap(), new JRBeanCollectionDataSource(Arrays.asList(delegate.getAccountDetails(accountId))));
-//        //converting DOM representation into byte array
-//        return JasperExportManager.exportReportToPdf(print);
-//    }
 
     @RequestMapping(path = "/api/v1/account/{accountId}/transactions")
     @ResponseBody

