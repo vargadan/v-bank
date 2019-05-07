@@ -14,7 +14,7 @@ import java.util.function.Consumer;
 @Log
 public class VBankApplication {
 
-    Consumer<String> logConsumer = log::fine;
+    Consumer<String> logConsumer = log::info;
 
     public static void main(String[] args) {
         SpringApplication.run(VBankApplication.class, args);
@@ -34,5 +34,4 @@ public class VBankApplication {
 
         };
     }
-
 }

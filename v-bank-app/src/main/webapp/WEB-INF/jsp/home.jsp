@@ -1,43 +1,46 @@
-<!DOCTYPE html>
-<%@ taglib prefix="spring" uri="http://www.springframework.org/tags" %>
-<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
-<html lang="en">
-<jsp:include page="header.jsp">
-    <jsp:param name="title" value="Here are you accounts, ${username}"/>
-</jsp:include>
-<script type="text/javascript" src="/js/jquery-3.3.1.js"></script>
-<script type="text/javascript">
-    function addAccountRow(accountId) {
-        console.log('accountId : ' + accountId);
-        $(document).ready(function () {
-            $.ajax({
-                url: "/api/v1/account/" + accountId
-            }).then(function (data) {
-                var accountRow = getAccountRowTable(data);
-                $('#accountsTable  > tbody:last-child').append(accountRow);
+<!doctype html>
+<%@taglib prefix="t" tagdir="/WEB-INF/tags" %>
+<%@taglib prefix="spring" uri="http://www.springframework.org/tags" %>
+<%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<t:page t:onload="addAccountRows()">
+    <script type="text/javascript">
+        function addAccountRow(accountId) {
+            console.log('accountId : ' + accountId);
+            $(document).ready(function () {
+                $.ajax({
+                    url: "/api/v1/account/" + accountId
+                }).then(function (data) {
+                    var accountRow = getAccountBlock(data);
+                    $('#accounts-holder').append(accountRow);
+                });
             });
-        });
-    };
+        };
 
-    function getAccountRowTable(data) {
-        var accountRow = '<tr><td><a href="/history?accountNo='
-            + data.accountNo + '">'
-            + data.accountNo + '</a></td><td>'
-            + data.balance + '</td><td>'
-            + data.currency + '</td>'
-            + '<td><a href="/transfer?fromAccount='
-            + data.accountNo + '">TANSFER</a></td></tr>';
-        return accountRow;
+        function getAccountBlock(data) {
+            var trLinkTitle = 'SEND MONEY from ' + data.accountNo;
+            var trLinkHref = '/transfer?fromAccount=' + data.accountNo;
+            var accountRow = '<div class="account-block">' +
+                '<div class="account-detail accountNo">Account Number : ' +
+                '<a href="/history?accountNo=' + data.accountNo + '" title="Show Transactions" >' + data.accountNo + '</a><div>' +
+                '<div class="account-detail balance">Balance : ' + data.balance + ' ' + data.currency + '</div>' +
+                '<a class="button transfer-link" href="' + trLinkHref + '" title="' + trLinkTitle + '">Send Money</a></div>';
+            return accountRow;
+        }
+
+    function addAccountRows() {
+            <c:forEach var="accountId" items="${accountIds}">
+                addAccountRow('${accountId}');
+            </c:forEach>
     }
-</script>
-<c:forEach var="accountId" items="${accountIds}">
-    <script type="text/javascript">addAccountRow('${accountId}')</script>
-</c:forEach>
-</div>
-<table id="accountsTable">
-    <tbody>
-    </tbody>
-</table>
-<%@ include file="footer.jsp" %>
-</body>
-</html>
+    </script>
+    <div class="container" id="accounts-holder">
+    </div>
+    <div class="container">
+        <form method="POST" action="/uploadTransactions" enctype="multipart/form-data">
+            <label path="file">Select XML file with transactions</label>
+            <br/>
+            <input type="file" name="file" class="file-upload" />
+            <input id="upload-button" type="submit" class="button" value="Send" />
+        </form>
+    </div>
+</t:page>
