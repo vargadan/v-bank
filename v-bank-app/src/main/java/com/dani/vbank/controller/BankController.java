@@ -1,5 +1,6 @@
 package com.dani.vbank.controller;
 
+import com.dani.vbank.model.Transactions;
 import com.dani.vbank.service.AccountService;
 import com.dani.vbank.model.AccountDetails;
 import com.dani.vbank.model.Transaction;
@@ -8,12 +9,16 @@ import lombok.extern.java.Log;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.xml.bind.JAXBContext;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -28,7 +33,6 @@ public class BankController {
     AccountService accountService;
 
     @RequestMapping("/")
-    @SneakyThrows
     public String home(Model model) {
         String user = request.getRemoteUser();
         List<String> accountIds = new ArrayList<>();
@@ -39,7 +43,6 @@ public class BankController {
     }
 
     @RequestMapping("/history")
-    @SneakyThrows
     public String history(Model model) {
         String accountNo = request.getParameter("accountNo");
         List<Transaction> transactions = accountService.getTransactionHistory(accountNo);
@@ -54,13 +57,23 @@ public class BankController {
     }
 
     @RequestMapping(value = "/doTransfer", method = RequestMethod.POST)
-    public ModelAndView doTransfer(@ModelAttribute Transaction transaction, Model model) {
-        if (accountService.transfer(transaction.getFromAccount(), transaction.getToAccount(), transaction.getAmount(),
+    public ModelAndView doTransfer(@ModelAttribute Transaction transaction, ModelMap model) {
+        if (accountService.transfer(transaction.getFromAccountNo(), transaction.getToAccountNo(), transaction.getAmount(),
                 transaction.getCurrency(), transaction.getNote())) {
             model.addAttribute("message", "Transaction was completed.");
         } else {
             model.addAttribute("message", "Transaction is pending.");
         }
-        return new ModelAndView("redirect:/", model.asMap());
+        return new ModelAndView("redirect:/", model);
     }
+
+    @PostMapping("/uploadTransactions")
+    public ModelAndView uploadTransactions(@ModelAttribute MultipartFile file, ModelMap model) throws Exception {
+        JAXBContext context = JAXBContext.newInstance(Transactions.class, Transaction.class);
+        Transactions transactions = (Transactions) context.createUnmarshaller()
+                .unmarshal(file.getInputStream());
+        transactions.getTransactions().forEach(transaction -> doTransfer(transaction, model));
+        return new ModelAndView("redirect:/history", model);
+    }
+
 }

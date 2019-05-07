@@ -12,13 +12,14 @@ import javax.sql.DataSource;
 import java.math.BigDecimal;
 import java.sql.Connection;
 import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
 
 @Log
 @Component
-public class AccountServiceSQLImpl implements AccountService {
+public class JDBCAccountService implements AccountService {
 
     @Autowired
     private DataSource dataSource;
@@ -64,51 +65,53 @@ public class AccountServiceSQLImpl implements AccountService {
 
     @Override
     @SneakyThrows
-    public boolean transfer(String fromAcountId, String toAccountId, BigDecimal amount, String currency, String note) {
+    public boolean transfer(String fromAccountId, String toAccountId, BigDecimal amount, String currency, String note) {
         currency = currency.toUpperCase();
-        try (Connection connection = dataSource.getConnection()) {
+
             AccountDetails toAccount = getAccountDetails(toAccountId);
-            AccountDetails fromAccount = getAccountDetails(fromAcountId);
+            AccountDetails fromAccount = getAccountDetails(fromAccountId);
             //if both account exists we execute the transaction
             if (toAccount != null && fromAccount != null) {
                 //update balance of fromAccount
                 {
                     BigDecimal newBalance = fromAccount.getBalance().subtract(amount);
-                    StringBuilder update = new StringBuilder("UPDATE ACCOUNT SET BALANCE = ").append(newBalance)
-                            .append(" WHERE ACCOUNT_ID = '").append(fromAcountId)
-                            .append("' AND CURRENCY='").append(currency).append("'");
-                    log.info("SQL updating balance (-) : " + update.toString());
-                    connection.createStatement().execute(update.toString());
+                    updateAccountBalance(fromAccountId, newBalance, currency);
                 }
                 //update balance of toAccount
                 {
                     BigDecimal newBalance = toAccount.getBalance().add(amount);
-                    StringBuilder update = new StringBuilder("UPDATE ACCOUNT SET BALANCE = ").append(newBalance)
-                            .append(" WHERE ACCOUNT_ID = '").append(toAccountId)
-                            .append("' AND CURRENCY='").append(currency).append("'");
-                    log.info("SQL updating balance (+) : " + update.toString());
-                    connection.createStatement().execute(update.toString());
+                    updateAccountBalance(toAccountId, newBalance, currency);
                 }
+                // create transaction record
                 {
-                    // create transaction record
-                    StringBuilder insert = new StringBuilder("INSERT INTO TRANSACTION (FROM_ACCOUNT,TO_ACCOUNT,AMOUNT,CURRENCY,NOTE,EXECUTED) VALUES('")
-                            .append(fromAcountId).append("','").append(toAccountId).append("',")
-                            .append(amount).append(",'").append(currency).append("','")
-                            .append(note).append("',").append(true).append(")");
-                    log.info("SQL creating transaction : " + insert.toString());
-                    connection.createStatement().execute(insert.toString());
+                    insertTransaction(fromAccountId, toAccountId, amount, currency, note);
                 }
                 return true;
             } else {
                 // create transaction record
-                StringBuilder insert = new StringBuilder("INSERT INTO TRANSACTION (FROM_ACCOUNT,TO_ACCOUNT,AMOUNT,CURRENCY,NOTE,EXECUTED) VALUES('")
-                        .append(fromAcountId).append("','").append(toAccountId).append("',")
-                        .append(amount).append(",'").append(currency).append("','")
-                        .append(note).append("',").append(false).append(")");
-                log.info("SQL creating transaction : " + insert.toString());
-                connection.createStatement().execute(insert.toString());
+                insertTransaction(fromAccountId, toAccountId, amount, currency, note);
                 return false;
             }
+    }
+
+    private boolean insertTransaction(String fromAccountId, String toAccountId, BigDecimal amount, String currency, String note) throws SQLException {
+        try (Connection connection = dataSource.getConnection()) {
+            StringBuilder insert = new StringBuilder("INSERT INTO TRANSACTION (FROM_ACCOUNT,TO_ACCOUNT,AMOUNT,CURRENCY,NOTE,EXECUTED) VALUES('")
+                    .append(fromAccountId).append("','").append(toAccountId).append("',")
+                    .append(amount).append(",'").append(currency).append("','")
+                    .append(note).append("',").append(false).append(")");
+            log.info("SQL creating transaction : " + insert.toString());
+            return connection.createStatement().execute(insert.toString());
+        }
+    }
+
+    private boolean updateAccountBalance(String accountId, BigDecimal amount, String currency) throws SQLException {
+        try (Connection connection = dataSource.getConnection()) {
+            StringBuilder update = new StringBuilder("UPDATE ACCOUNT SET BALANCE = ").append(amount)
+                    .append(" WHERE ACCOUNT_ID = '").append(accountId)
+                    .append("' AND CURRENCY='").append(currency).append("'");
+            log.info("SQL updating balance (-) : " + update.toString());
+            return connection.createStatement().execute(update.toString());
         }
     }
 
