@@ -1,0 +1,14 @@
+spec:
+  template:
+    spec:
+      containers:
+        - env:
+            - name: JAVA_APP_JAR
+              value: /deployments/v-bank-app-1.0-SNAPSHOT.war
+          resources:
+            requests:
+              cpu: 100m
+              memory: 200Mi
+            limits:
+              cpu: 200m
+              memory: 400Mi
