@@ -19,6 +19,9 @@
     <c:if test="${not empty param.error}" >
         <c:set var="error" value="${param.error}" />
     </c:if>
+    <c:if test="${not empty param.message}" >
+        <c:set var="message" value="${param.message}" />
+    </c:if>
 <html>
     <body onload="${onload}">
         <div class="container-fluid">

@@ -1,15 +1,15 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <transactions>
     <transaction>
-        <fromAccountNo>1-111-1</fromAccountNo>
-        <toAccountNo>2-222-2</toAccountNo>
+        <fromAccountNo>1-111111-11</fromAccountNo>
+        <toAccountNo>2-222222-22</toAccountNo>
         <amount>123</amount>
         <currency>CHF</currency>
         <note>hello</note>
     </transaction>
     <transaction>
-        <fromAccountNo>2-222-2</fromAccountNo>
-        <toAccountNo>3-333-3</toAccountNo>
+        <fromAccountNo>2-222222-22</fromAccountNo>
+        <toAccountNo>3-333333-33</toAccountNo>
         <amount>123</amount>
         <currency>CHF</currency>
         <note>hello</note>
