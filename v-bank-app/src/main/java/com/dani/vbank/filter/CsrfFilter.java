@@ -1,5 +1,7 @@
 package com.dani.vbank.filter;
 
+import lombok.AllArgsConstructor;
+import lombok.Getter;
 import org.springframework.core.annotation.Order;
 import org.springframework.stereotype.Component;
 
@@ -13,6 +15,7 @@ import java.util.UUID;
 @Order(1)
 public class CsrfFilter implements Filter {
 
+
     @Override
     public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException, ServletException {
         validate((HttpServletRequest) request, (HttpServletResponse) response);
@@ -23,7 +26,7 @@ public class CsrfFilter implements Filter {
     private void validate(HttpServletRequest request, HttpServletResponse response) throws ServletException {
         if ("POST".equals(request.getMethod().toUpperCase())) {
             String csrfTokenIn = request.getParameter("_csrf");
-            String csrfTokenExp = (String) request.getSession().getAttribute("csrfToken");
+            String csrfTokenExp = (String) request.getSession().getAttribute("csrfProtectionToken");
             if (!csrfTokenExp.equals(csrfTokenIn)) {
                 throw new ServletException("Invalid CSRF token!");
             }
@@ -31,10 +34,10 @@ public class CsrfFilter implements Filter {
     }
 
     private void setToken(HttpServletRequest request, HttpServletResponse response) {
-        String csrfToken = (String) request.getSession(true).getAttribute("csrfToken");
-        if (csrfToken == null) {
-            csrfToken = UUID.randomUUID().toString();
-            request.getSession().setAttribute("csrfToken", csrfToken);
+        String csrfProtectionToken = (String) request.getSession(true).getAttribute("csrfProtectionToken");
+        if (csrfProtectionToken == null) {
+            csrfProtectionToken = UUID.randomUUID().toString();
+            request.getSession().setAttribute("csrfProtectionToken", csrfProtectionToken);
         }
     }
 }
