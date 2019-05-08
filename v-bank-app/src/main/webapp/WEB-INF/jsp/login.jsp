@@ -2,7 +2,7 @@
 <%@taglib prefix="t" tagdir="/WEB-INF/tags" %>
 <%@taglib prefix="spring" uri="http://www.springframework.org/tags" %>
 <%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
-
+<%@taglib prefix="sec" uri="http://www.springframework.org/security/tags" %>
 <t:page>
     <div class="container">
         <div class="row">
@@ -16,7 +16,7 @@
         <div class="w-100"></div>
         <div class="row">
             <form id="loginform" action="/login" method="post">
-                <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}"/>
+                <sec:csrfInput />
                 <div class="wrap-input">
                     <input class="input-login" id="username" type="text" name="username" placeholder="Username"/>
                     <span class="focus-input" />

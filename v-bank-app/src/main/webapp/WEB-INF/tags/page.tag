@@ -30,7 +30,7 @@
                                         <button id="logout-button" class="button"
                                         onclick="document.getElementById('logoutForm').submit()">LOGOUT</button>
                                         <form method="post" action="/logout" id="logoutForm">
-                                                <sec:csrfInput />
+                                            <sec:csrfInput />
                                         </form>
                                 </sec:authorize>
                         </div>
