@@ -57,7 +57,7 @@
         <div class="container-fluid">
                 <div id="footer" class="row align-items-end">
                     <div class="col left">Copyright: USSR (Usable, Secure, Simple and Robust) Software Corp. 2019</div>
-                    <div class="col right">&nbsp;</div>
+                    <div class="col right">git.branch : <%=System.getProperty("git.branch","n/a")%></div>
                 </div>
         </div>
     </body>
