@@ -51,6 +51,11 @@
                 <div class="row alert alert-info" role="alert"><c:out value="${info}"/></div>
             </div>
         </c:if>
+        <c:if test="${not empty message}">
+            <div class="container">
+                <div class="row alert alert-warning" role="alert"><c:out value="${message}"/></div>
+            </div>
+        </c:if>
         <div id="body" class="container">
             <jsp:doBody/>
         </div>
