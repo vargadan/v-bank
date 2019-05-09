@@ -44,7 +44,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .logout()
                 .permitAll();
         //disable CSRF protection
-        http.csrf().disable();
+        //http.csrf().disable();
         //disable CORS
         http.cors().disable();
         //disable XSS proctection
