@@ -23,7 +23,7 @@
         <c:set var="message" value="${param.message}" />
     </c:if>
 <html>
-    <body onload="${onload}">
+    <body>
         <div class="container-fluid">
                 <div id="header" class="row align-items-start">
                         <div class="col left">V-Bank Internet Banking</div>

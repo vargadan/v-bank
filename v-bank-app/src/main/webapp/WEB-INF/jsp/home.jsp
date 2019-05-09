@@ -2,7 +2,7 @@
 <%@taglib prefix="t" tagdir="/WEB-INF/tags" %>
 <%@taglib prefix="spring" uri="http://www.springframework.org/tags" %>
 <%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
-<t:page t:onload="addAccountRows()">
+<t:page>
     <script type="text/javascript">
         function addAccountRow(accountId) {
             console.log('accountId : ' + accountId);
@@ -27,11 +27,13 @@
             return accountRow;
         }
 
-    function addAccountRows() {
-            <c:forEach var="accountId" items="${accountIds}">
-                addAccountRow('${accountId}');
-            </c:forEach>
-    }
+        function addAccountRows() {
+                <c:forEach var="accountId" items="${accountIds}">
+                    addAccountRow('${accountId}');
+                </c:forEach>
+        }
+
+        body.addEventListener("load", addAccountRows, false);
     </script>
     <div class="container" id="accounts-holder">
     </div>
