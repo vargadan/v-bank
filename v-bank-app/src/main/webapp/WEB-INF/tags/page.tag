@@ -38,7 +38,7 @@
                                 </sec:authorize>
                         </div>
                 </div>
-        </div>   q  qa  n2a z
+        </div>
     <c:if test="${not empty SPRING_SECURITY_LAST_EXCEPTION}">
         <div class="container">
            <div class="row alert alert-danger" role="alert"><c:out value="${SPRING_SECURITY_LAST_EXCEPTION.message}"/></div>
