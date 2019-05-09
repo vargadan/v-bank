@@ -1,4 +1,4 @@
-package com.hellokoding.springboot.view;
+package com.vargadan.attacker;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.SneakyThrows;
