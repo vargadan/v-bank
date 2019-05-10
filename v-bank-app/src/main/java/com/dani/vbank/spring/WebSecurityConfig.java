@@ -52,7 +52,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
         //disable session fixation procection
         http.sessionManagement().sessionFixation().none();
         //protecting against loading/executing external javascript
-        http.headers().contentSecurityPolicy("script-src 'self' 'unsafe-inline'");
+//        http.headers().contentSecurityPolicy("script-src 'self' 'unsafe-inline'");
     }
 
     @Override

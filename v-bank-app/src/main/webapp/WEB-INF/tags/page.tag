@@ -3,6 +3,7 @@
 <%@taglib prefix="sec" uri="http://www.springframework.org/security/tags" %>
 <%@tag description="Overall Page template" pageEncoding="UTF-8" %>
 <%@ attribute name="onload" required="false" %>
+<%@ attribute name="title" required="false" %>
 <head>
       <title>Logged in as ${username}</title>
       <meta name="_csrf" content="${_csrf.token}"/>
@@ -23,7 +24,7 @@
         <c:set var="message" value="${param.message}" />
     </c:if>
 <html>
-    <body>
+    <body onload="${onload}">
         <div class="container-fluid">
                 <div id="header" class="row align-items-start">
                         <div class="col left">V-Bank Internet Banking</div>

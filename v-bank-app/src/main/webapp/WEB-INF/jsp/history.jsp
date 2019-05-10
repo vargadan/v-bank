@@ -2,10 +2,7 @@
 <%@taglib prefix="t" tagdir="/WEB-INF/tags" %>
 <%@taglib prefix="spring" uri="http://www.springframework.org/tags" %>
 <%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
-<t:page>
-<%--<jsp:include page="header.jsp">--%>
-<%--    <jsp:param name="title" value="Transaction history of account ${param.accountNo}"/>--%>
-<%--</jsp:include>--%>
+<t:page title="Transaction history of account ${param.accountNo}">
 <table class="table table-sm">
     <thead>
     <tr>

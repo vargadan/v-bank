@@ -2,7 +2,7 @@
 <%@taglib prefix="t" tagdir="/WEB-INF/tags" %>
 <%@taglib prefix="spring" uri="http://www.springframework.org/tags" %>
 <%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
-<t:page>
+<t:page onload="addAccountRows()">
     <script type="text/javascript">
         function addAccountRow(accountId) {
             console.log('accountId : ' + accountId);
@@ -18,7 +18,7 @@
 
         function getAccountBlock(data) {
             var trLinkTitle = 'SEND MONEY from ' + data.accountNo;
-            var trLinkHref = '/transfer?fromAccount=' + data.accountNo;
+            var trLinkHref = '/transfer?fromAccountNo=' + data.accountNo;
             var accountRow = '<div class="account-block">' +
                 '<div class="account-detail accountNo">Account Number : ' +
                 '<a href="/history?accountNo=' + data.accountNo + '" title="Show Transactions" >' + data.accountNo + '</a><div>' +
@@ -33,7 +33,6 @@
                 </c:forEach>
         }
 
-        body.addEventListener("load", addAccountRows, false);
     </script>
     <div class="container" id="accounts-holder">
     </div>
