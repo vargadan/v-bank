@@ -27,8 +27,8 @@
                     <label for="note">Note:</label>
                     <input id="note" name="note" type="text" value="">
                 </p>
-                <c:if test="${not empty csrfProtectionToken}">
-                    <input type="hidden" name="_csrf" value="${csrfProtectionToken}"/>
+                <c:if test="${not empty _csrf}">
+                    <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}"/>
                 </c:if>
                 <p>
                     <input type="submit" value="send" class="button"/>
