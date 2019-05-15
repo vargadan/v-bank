@@ -18,7 +18,7 @@
 
         function getAccountBlock(data) {
             var trLinkTitle = 'SEND MONEY from ' + data.accountNo;
-            var trLinkHref = '/transfer?fromAccount=' + data.accountNo;
+            var trLinkHref = '/transfer?fromAccountNo=' + data.accountNo;
             var accountRow = '<div class="account-block">' +
                 '<div class="account-detail accountNo">Account Number : ' +
                 '<a href="/history?accountNo=' + data.accountNo + '" title="Show Transactions" >' + data.accountNo + '</a><div>' +

@@ -9,23 +9,23 @@
 <%--</jsp:include>--%>
     <div class="container">
         <form action="/doTransfer" method="post">
-            <input id="fromAccount" name="fromAccount" type="hidden" value="${param.fromAccount}">
+            <input id="fromAccount" name="fromAccountNo" type="hidden" value="${param.fromAccountNo}">
             <fieldset>
                 <p>
                     <label for="toAccount">To Account:</label>
-                    <input id="toAccount" name="toAccount" type="text" value="${param.toAccount}">
+                    <input id="toAccount" name="toAccountNo" type="text" value="">
                 </p>
                 <p>
                     <label for="amount">Amount:</label>
-                    <input id="amount" name="amount" type="text" value="${param.toAccount}">
+                    <input id="amount" name="amount" type="text" value="">
                 </p>
                 <p>
                     <label for="currency">Currency:</label>
-                    <input id="currency" name="currency" type="text" value="${param.toAccount != null ? param.toAccount : 'CHF'}">
+                    <input id="currency" name="currency" type="text" value="CHF">
                 </p>
                 <p>
                     <label for="note">Note:</label>
-                    <input id="note" name="note" type="text" value="${param.toAccount}">
+                    <input id="note" name="note" type="text" value="">
                 </p>
                 <p>
                     <input type="submit" value="send" class="button"/>
