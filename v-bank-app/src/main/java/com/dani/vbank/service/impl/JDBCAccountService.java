@@ -84,22 +84,22 @@ public class JDBCAccountService implements AccountService {
                 }
                 // create transaction record
                 {
-                    insertTransaction(fromAccountId, toAccountId, amount, currency, note);
+                    insertTransaction(fromAccountId, toAccountId, amount, currency, note, false);
                 }
                 return true;
             } else {
                 // create transaction record
-                insertTransaction(fromAccountId, toAccountId, amount, currency, note);
+                insertTransaction(fromAccountId, toAccountId, amount, currency, note, true);
                 return false;
             }
     }
 
-    private boolean insertTransaction(String fromAccountId, String toAccountId, BigDecimal amount, String currency, String note) throws SQLException {
+    private boolean insertTransaction(String fromAccountId, String toAccountId, BigDecimal amount, String currency, String note, boolean pending) throws SQLException {
         try (Connection connection = dataSource.getConnection()) {
             StringBuilder insert = new StringBuilder("INSERT INTO TRANSACTION (FROM_ACCOUNT,TO_ACCOUNT,AMOUNT,CURRENCY,NOTE,EXECUTED) VALUES('")
                     .append(fromAccountId).append("','").append(toAccountId).append("',")
                     .append(amount).append(",'").append(currency).append("','")
-                    .append(note).append("',").append(false).append(")");
+                    .append(note).append("',").append(!pending).append(")");
             log.info("SQL creating transaction : " + insert.toString());
             return connection.createStatement().execute(insert.toString());
         }
