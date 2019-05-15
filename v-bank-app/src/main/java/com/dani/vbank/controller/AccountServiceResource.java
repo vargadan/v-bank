@@ -1,5 +1,6 @@
 package com.dani.vbank.controller;
 
+import com.dani.vbank.service.AccountService;
 import com.dani.vbank.service.impl.JDBCAccountService;
 import com.dani.vbank.model.AccountDetails;
 import com.dani.vbank.model.Transaction;
@@ -13,7 +14,7 @@ import java.util.List;
 public class AccountServiceResource {
 
     @Autowired
-    private JDBCAccountService delegate;
+    private AccountService delegate;
 
     @Autowired
     private DataGenerator generator;

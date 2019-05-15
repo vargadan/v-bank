@@ -2,6 +2,7 @@ package com.dani.vbank.model;
 
 import lombok.*;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.Table;
@@ -16,9 +17,10 @@ import java.math.BigDecimal;
 public class AccountDetails {
 
     @Id
+    @Column(name="ACCOUNT_ID")
     private String accountNo;
 
-    private String ownerId;
+    private String username;
 
     private BigDecimal balance;
 
