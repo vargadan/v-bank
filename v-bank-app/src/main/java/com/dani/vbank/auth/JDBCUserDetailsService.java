@@ -11,12 +11,15 @@ import org.springframework.stereotype.Component;
 
 import javax.sql.DataSource;
 import java.sql.Connection;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.Statement;
 
 @Log
 @Component
 public class JDBCUserDetailsService implements UserDetailsService {
+
+    private final static String SQL_QUERY = "SELECT USERNAME, PASSWORD FROM USER U WHERE U.USERNAME = ?";
 
     @Autowired
     private DataSource dataSource;
@@ -25,11 +28,10 @@ public class JDBCUserDetailsService implements UserDetailsService {
     @SneakyThrows
     public UserDetails loadUserByUsername(String uname) throws UsernameNotFoundException {
         try (Connection connection = dataSource.getConnection()) {
-            Statement stmt = connection.createStatement();
-            String sql = "SELECT USERNAME, PASSWORD " +
-                    "FROM USER U WHERE U.USERNAME = '" + uname + "'";
-            log.warning(sql);
-            ResultSet resultSet = stmt.executeQuery(sql);
+            PreparedStatement stmt = connection.prepareStatement(SQL_QUERY);
+            stmt.setString(1, uname);
+            log.warning(SQL_QUERY + "; ? = " + uname);
+            ResultSet resultSet = stmt.executeQuery();
             if (resultSet.next()) {
                 final String username = resultSet.getString("USERNAME");
                 final String password = resultSet.getString("PASSWORD");
