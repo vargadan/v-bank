@@ -2,6 +2,10 @@ package com.dani.vbank.model;
 
 import lombok.*;
 
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
 import javax.xml.bind.annotation.*;
 import java.math.BigDecimal;
 
@@ -18,7 +22,13 @@ import java.math.BigDecimal;
         "currency",
         "note"
 })
+@Entity
 public class Transaction {
+
+    @XmlElement(required = false)
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    Long transactionId;
 
     @XmlElement(required = true)
     String fromAccountNo;

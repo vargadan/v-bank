@@ -125,6 +125,7 @@ public class JDBCAccountService implements AccountService {
             List<Transaction> transactions = new ArrayList<>();
             while (resultSet.next()) {
                 Transaction transaction = new Transaction(
+                        resultSet.getLong("TRANSACTION_ID"),
                         resultSet.getString("FROM_ACCOUNT"),
                         resultSet.getString("TO_ACCOUNT"),
                         resultSet.getBigDecimal("AMOUNT"),
