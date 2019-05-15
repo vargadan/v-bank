@@ -125,7 +125,7 @@ public class BankController {
         } else if (accountNo.trim().length() != 11) {
             //it should be 11 long
             throw new ValidationException("Account number should be 11 characters long");
-        } else if (accountNo.matches(ACCOUNT_NO_PATTERN)) {
+        } else if (!accountNo.matches(ACCOUNT_NO_PATTERN)) {
             //it has to match patter
             throw new ValidationException("Account number is in invalid format");
         } else if (accountService.getAccountDetails(accountNo) == null) {
