@@ -2,7 +2,10 @@ package com.dani.vbank.model;
 
 import lombok.*;
 
-import javax.persistence.*;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
 import javax.xml.bind.annotation.*;
 import java.math.BigDecimal;
 
@@ -22,10 +25,10 @@ import java.math.BigDecimal;
 @Entity
 public class Transaction {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
     @XmlElement(required = false)
-    String transactionId;
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    Long transactionId;
 
     @XmlElement(required = true)
     String fromAccountNo;
