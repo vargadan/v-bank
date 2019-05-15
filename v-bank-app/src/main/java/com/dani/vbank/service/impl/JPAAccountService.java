@@ -6,22 +6,30 @@ import com.dani.vbank.service.AccountService;
 import lombok.SneakyThrows;
 import lombok.extern.java.Log;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityManager;
 import javax.persistence.Query;
+import javax.sql.DataSource;
 import java.math.BigDecimal;
 import java.util.List;
 
 @Log
+@Service
 public class JPAAccountService implements AccountService {
 
     @Autowired
     private EntityManager entityManager;
 
+    @Autowired
+    DataSource dataSource;
+
     @Override
     @SneakyThrows
     public List<AccountDetails> getAccountDetailsForUser(String userName) {
-        Query query = entityManager.createQuery("select ad from AccountDetail ac where ac.ownerId = :uName");
+        Query query = entityManager.createQuery("select ad from AccountDetails ad where ad.username = :uName");
         query.setParameter("uName", userName);
         return query.getResultList();
     }
@@ -34,6 +42,7 @@ public class JPAAccountService implements AccountService {
 
     @Override
     @SneakyThrows
+    @Transactional
     public boolean transfer(String fromAccountId, String toAccountId, BigDecimal amount, String currency, String note) {
         currency = currency.toUpperCase();
         AccountDetails toAccount = getAccountDetails(toAccountId);
@@ -81,7 +90,7 @@ public class JPAAccountService implements AccountService {
     @Override
     @SneakyThrows
     public List<Transaction> getTransactionHistory(String accountNo) {
-        return entityManager.createQuery("select t from Transaction t where t.fromAccountNo = :accountNo or t.toAccountNo")
+        return entityManager.createQuery("select t from Transaction t where t.fromAccountNo = :accountNo or t.toAccountNo = :accountNo")
                 .setParameter("accountNo", accountNo).getResultList();
     }
 }

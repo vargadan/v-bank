@@ -15,7 +15,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Log
-@Component
+//@Component
 public class JDBCAccountService implements AccountService {
 
     @Autowired
