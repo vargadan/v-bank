@@ -22,8 +22,8 @@
     </c:if>
     <c:forEach var="transaction" items="${transactions}">
         <tr>
-            <td>${transaction.fromAccount}</td>
-            <td>${transaction.toAccount}</td>
+            <td>${transaction.fromAccountNo}</td>
+            <td>${transaction.toAccountNo}</td>
             <td>${transaction.amount}</td>
             <td>${transaction.currency}</td>
             <td>${not transaction.executed}</td>
