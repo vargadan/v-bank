@@ -60,11 +60,9 @@ CSRF with this exercise you are going to understand CSRF and its mitigations
 * Spring security support CSRF tokens out of the box, which is disabled in this exercise
 * we are going to add our own Csrf filter insted to understand how this mitigation works:
 
->
 @Component
 @Order(1)
 public class CsrfFilter implements Filter {
-
 
     @Override
     public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException, ServletException {
@@ -91,6 +89,5 @@ public class CsrfFilter implements Filter {
         }
     }
 }
-<
      
 
