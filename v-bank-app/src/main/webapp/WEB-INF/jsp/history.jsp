@@ -2,7 +2,11 @@
 <%@taglib prefix="t" tagdir="/WEB-INF/tags" %>
 <%@taglib prefix="spring" uri="http://www.springframework.org/tags" %>
 <%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<<<<<<< HEAD
 <t:page title="Transaction history of account ${param.accountNo}">
+=======
+<t:page title="Transaction history of ${param.accountNo}">
+>>>>>>> 5678176... titles
 <table class="table table-sm">
     <thead>
     <tr>
@@ -10,7 +14,7 @@
         <th scope="col">To Account</th>
         <th scope="col">Amount</th>
         <th scope="col">Currency</th>
-        <th scope="col">Pending</th>
+        <th scope="col">Executed</th>
         <th scope="col">Note</th>
     </tr>
     </thead>
@@ -26,7 +30,7 @@
             <td>${transaction.toAccountNo}</td>
             <td>${transaction.amount}</td>
             <td>${transaction.currency}</td>
-            <td>${not transaction.executed}</td>
+            <td>${transaction.executed}</td>
             <td>${transaction.note}</td>
         </tr>
     </c:forEach>
