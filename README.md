@@ -59,7 +59,7 @@ CSRF with this exercise you are going to understand CSRF and its mitigations
 * since samesite session cookies are not suppoted by the current JEE Servlet (2.3) and Spring (5.0.x) we have to revert to other methods
 * Spring security support CSRF tokens out of the box, which is disabled in this exercise
 * we are going to add our own Csrf filter insted to understand how this mitigation works:
-
+```
 @Component
 @Order(1)
 public class CsrfFilter implements Filter {
@@ -89,5 +89,5 @@ public class CsrfFilter implements Filter {
         }
     }
 }
-     
+```  
 
