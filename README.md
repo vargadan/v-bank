@@ -1,7 +1,8 @@
 # exercise 1 - CSRF
-1st exercise with the vulnerable e-bank
 
 CSRF with this exercise you are going to understand CSRF and its mitigations
+
+## setup and start applications
 
 1. check out exercise1 
    * from command line: 'git checkout exercise1'
@@ -26,6 +27,7 @@ CSRF with this exercise you are going to understand CSRF and its mitigations
   1. then go back to the transactions page and refresh it you will see that you are 1000 CHF worse off because you have been CSRF-ed
   
 ## understand how the CSRF attack is working
+
   1. setup tools for http interception and java debuging
      * start the Burp tool to intercept http calls
         * in the Proxy > Options tab change the proxy port from 8080 to 8181 so that it does not conflict with the v-bank application
@@ -42,6 +44,53 @@ CSRF with this exercise you are going to understand CSRF and its mitigations
      * if you expand the transaction method parameter it's properties should be properly populated
      * if you resume the program (F9 in IntelliJ) the transaction will be properly executed
      
+## Mitigations
+* Possible mitigations against CSRF
+  * protect session cookie with samesite attributes 
+    * lax if normal GET requests are safe and modifications are behind POST (or PUT/DELETE)
+    * strict otherwise
+    * unfortunately depends on web-framework / server if possible
+  * protect forms with CSRF token
+    * additional token 
+* for more detailed explanations please see: https://github.com/OWASP/CheatSheetSeries/blob/master/cheatsheets/Cross-Site_Request_Forgery_Prevention_Cheat_Sheet.md
 
+
+## Task
+* since samesite session cookies are not suppoted by the current JEE Servlet (2.3) and Spring (5.0.x) we have to revert to other methods
+* Spring security support CSRF tokens out of the box, which is disabled in this exercise
+* we are going to add our own Csrf filter insted to understand how this mitigation works:
+
+>
+@Component
+@Order(1)
+public class CsrfFilter implements Filter {
+
+
+    @Override
+    public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException, ServletException {
+        validate((HttpServletRequest) request, (HttpServletResponse) response);
+        chain.doFilter(request, response);
+        setToken((HttpServletRequest) request, (HttpServletResponse) response);
+    }
+
+    private void validate(HttpServletRequest request, HttpServletResponse response) throws ServletException {
+        if ("POST".equals(request.getMethod().toUpperCase())) {
+            String csrfTokenIn = request.getParameter("_csrf");
+            String csrfTokenExp = (String) request.getSession().getAttribute("csrfProtectionToken");
+            if (!csrfTokenExp.equals(csrfTokenIn)) {
+                throw new ServletException("Invalid CSRF token!");
+            }
+        }
+    }
+
+    private void setToken(HttpServletRequest request, HttpServletResponse response) {
+        String csrfProtectionToken = (String) request.getSession(true).getAttribute("csrfProtectionToken");
+        if (csrfProtectionToken == null) {
+            csrfProtectionToken = UUID.randomUUID().toString();
+            request.getSession().setAttribute("csrfProtectionToken", csrfProtectionToken);
+        }
+    }
+}
+<
      
 
