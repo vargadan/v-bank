@@ -1,6 +1,6 @@
 # Exercise 1 - CSRF
 
-CSRF with this exercise you are going to understand CSRF and its mitigations
+CSRF with this exercise to help you understand CSRF and its most common mitigation
 
 ## Setup and Start Applications
 
