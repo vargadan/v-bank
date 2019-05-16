@@ -2,11 +2,7 @@
 <%@taglib prefix="t" tagdir="/WEB-INF/tags" %>
 <%@taglib prefix="spring" uri="http://www.springframework.org/tags" %>
 <%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
-<<<<<<< HEAD
-<t:page title="Transaction history of account ${param.accountNo}">
-=======
 <t:page title="Transaction history of ${param.accountNo}">
->>>>>>> 5678176... titles
 <table class="table table-sm">
     <thead>
     <tr>
