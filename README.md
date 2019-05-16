@@ -1,8 +1,8 @@
-# exercise 1 - CSRF
+# Exercise 1 - CSRF
 
 CSRF with this exercise you are going to understand CSRF and its mitigations
 
-## setup and start applications
+## Setup and Start Applications
 
 1. check out exercise1 
    * from command line: 'git checkout exercise1'
@@ -26,7 +26,7 @@ CSRF with this exercise you are going to understand CSRF and its mitigations
   1. as (little careless) bob open the above page and click on the button
   1. then go back to the transactions page and refresh it you will see that you are 1000 CHF worse off because you have been CSRF-ed
   
-## understand how the CSRF attack is working
+## Understand how the CSRF attack is working
 
   1. setup tools for http interception and java debuging
      * start the Burp tool to intercept http calls
@@ -55,7 +55,7 @@ CSRF with this exercise you are going to understand CSRF and its mitigations
 * for more detailed explanations please see: https://github.com/OWASP/CheatSheetSeries/blob/master/cheatsheets/Cross-Site_Request_Forgery_Prevention_Cheat_Sheet.md
 
 
-## Task
+## Fix
 * since samesite session cookies are not suppoted by the current JEE Servlet (2.3) and Spring (5.0.x) we have to revert to other methods
 * Spring security support CSRF tokens out of the box, which is disabled in this exercise
 * we are going to add our own Csrf filter insted to understand how this mitigation works:
@@ -107,7 +107,7 @@ public class CsrfFilter implements Filter {
 Add the a hidden input of name *_csrf* to the transfer form in *transfer.jsp*
 `<input type="hidden" name="_csrf" value="${csrfProtectionToken}"/>`
 
-## Verify solution
+## Verify fix
 Having added the CsrfFilter and the token parameter to the form the CSRF request from the attacker site should be blocked.
 You can verify it by placen a break-point in *CsrfFilter.validate(...)* Th
 
