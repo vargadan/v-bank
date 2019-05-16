@@ -24,9 +24,24 @@ CSRF with this exercise you are going to understand CSRF and its mitigations
      * if you open the page source you see that it contains a pre filled form posted at the url handling transactions forms 
   1. as (little careless) bob open the above page and click on the button
   1. then go back to the transactions page and refresh it you will see that you are 1000 CHF worse off because you have been CSRF-ed
-  1. in order to understand how the CSRF attack is working
+  
+## understand how the CSRF attack is working
+  1. setup tools for http interception and java debuging
      * start the Burp tool to intercept http calls
         * in the Proxy > Options tab change the proxy port from 8080 to 8181 so that it does not conflict with the v-bank application
         * change your browser's proxy to 127.0.0.1:8181
         * make sure that Intercept is ON in the Burp tool (Proxy > Intercep tab)
      * Place a debug brakepoint in *BankController.doTransfer(...)* (*BankController* class *doTransfer* method)
+  1. refresh the transfer page and intercept the http get request 
+     * Please note the JSESSION cookie value in the Burp tool
+     * Forward this and all subsequent requests
+  1. go to the csrf attack page and click on the button again so that the CSRF call itself get interecpted
+     * Please note the JSESSION cookie value in the Burp tool (it should be the same as the 
+     * Forward the request
+  1. Now the breakpoint should be hit
+     * if you expand the transaction method parameter it's properties should be properly populated
+     * if you resume the program (F9 in IntelliJ) the transaction will be properly executed
+     
+
+     
+
