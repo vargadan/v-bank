@@ -29,4 +29,4 @@ CSRF with this exercise you are going to understand CSRF and its mitigations
         * in the Proxy > Options tab change the proxy port from 8080 to 8181 so that it does not conflict with the v-bank application
         * change your browser's proxy to 127.0.0.1:8181
         * make sure that Intercept is ON in the Burp tool (Proxy > Intercep tab)
-     * Place a debug brakepoint in BankController.doTransfer(...) (*BankController* class *doTransfer* method)
+     * Place a debug brakepoint in *BankController.doTransfer(...)* (*BankController* class *doTransfer* method)
