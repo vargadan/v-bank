@@ -2,13 +2,9 @@
 <%@taglib prefix="t" tagdir="/WEB-INF/tags" %>
 <%@taglib prefix="spring" uri="http://www.springframework.org/tags" %>
 <%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
-
-<t:page>
+<t:page title="V-Bank Web Login">
     <div class="container">
         <div class="row">
-<%--            <c:if test="${param.error != null}">--%>
-<%--                <div class="alert alert-danger" role="alert">Invalid username and password.</div>--%>
-<%--            </c:if>--%>
             <c:if test="${param.logout != null}">
                 <div class="alert alert-info" role="alert">You have been logged out.</div>
             </c:if>

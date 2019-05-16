@@ -2,11 +2,7 @@
 <%@taglib prefix="t" tagdir="/WEB-INF/tags" %>
 <%@taglib prefix="spring" uri="http://www.springframework.org/tags" %>
 <%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
-
-<t:page>
-<%--<jsp:include page="header.jsp">--%>
-<%--    <jsp:param name="title" value="Please make a transfer from ${param.fromAccount}"/>--%>
-<%--</jsp:include>--%>
+<t:page title="Make a transfer from ${param.fromAccountNo}">
     <div class="container">
         <form action="/doTransfer" method="post">
             <input id="fromAccount" name="fromAccountNo" type="hidden" value="${param.fromAccountNo}">
