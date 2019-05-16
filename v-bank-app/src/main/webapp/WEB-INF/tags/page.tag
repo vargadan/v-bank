@@ -2,9 +2,10 @@
 <%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@taglib prefix="sec" uri="http://www.springframework.org/security/tags" %>
 <%@tag description="Overall Page template" pageEncoding="UTF-8" %>
+<%@ attribute name="title" required="true" %>
 <%@ attribute name="onload" required="false" %>
 <head>
-      <title>Logged in as ${username}</title>
+      <title>${title}</title>
       <meta name="_csrf" content="${_csrf.token}"/>
       <meta name="_csrf_header" content="${_csrf.headerName}"/>
       <meta charset="utf-8" />
@@ -57,6 +58,7 @@
         </div>
     </c:if>
         <div id="body" class="container">
+            <h2>${title}</h2>
             <jsp:doBody/>
         </div>
         <div class="container-fluid">
