@@ -104,4 +104,12 @@ public class CsrfFilter implements Filter {
     }
 }
 ```  
+Add the a hidden input of name *_csrf* to the transfer form in *transfer.jsp*
+`<input type="hidden" name="_csrf" value="${csrfProtectionToken}"/>`
 
+## Verify solution
+Having added the CsrfFilter and the token parameter to the form the CSRF request from the attacker site should be blocked.
+You can verify it by placen a break-point in *CsrfFilter.validate(...)* Th
+
+The solution is avaliable in the _exercise1-solution_ branch 
+https://github.com/vargadan/v-bank/tree/exercise1-solution
