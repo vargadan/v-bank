@@ -23,6 +23,13 @@ public class CsrfFilter implements Filter {
         setToken((HttpServletRequest) request, (HttpServletResponse) response);
     }
 
+    /**
+     * Check the POST request if the container a valid _csrf parameter as csrf protection token
+     *
+     * @param request
+     * @param response
+     * @throws ServletException
+     */
     private void validate(HttpServletRequest request, HttpServletResponse response) throws ServletException {
         if ("POST".equals(request.getMethod().toUpperCase())) {
             String csrfTokenIn = request.getParameter("_csrf");
@@ -33,6 +40,12 @@ public class CsrfFilter implements Filter {
         }
     }
 
+    /**
+     * Sets the csrf token value as a session attribute with name 'csrfProtectionToken'
+     *
+     * @param request
+     * @param response
+     */
     private void setToken(HttpServletRequest request, HttpServletResponse response) {
         String csrfProtectionToken = (String) request.getSession(true).getAttribute("csrfProtectionToken");
         if (csrfProtectionToken == null) {

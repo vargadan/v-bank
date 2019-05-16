@@ -5,6 +5,7 @@
 <t:page title="Make a transfer from ${param.fromAccountNo}">
     <div class="container">
         <form action="/doTransfer" method="post">
+            <input type="hidden" name="_csrf" value="${csrfProtectionToken}"/>
             <input id="fromAccount" name="fromAccountNo" type="hidden" value="${param.fromAccountNo}">
             <fieldset>
                 <p>
@@ -23,9 +24,6 @@
                     <label for="note">Note:</label>
                     <input id="note" name="note" type="text" value="">
                 </p>
-                <c:if test="${not empty csrfProtectionToken}">
-                    <input type="hidden" name="_csrf" value="${csrfProtectionToken}"/>
-                </c:if>
                 <p>
                     <input type="submit" value="send" class="button"/>
                 </p>
