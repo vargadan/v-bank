@@ -24,10 +24,12 @@ Present vulnerabilities:
 * In the *JDBCAccountService* class that is an implementation of the *AccountService* utilizing the JDBC API directly
 
 ##Exploit to understand
-* the SQL in the JDBCUserDetailsService class is `"SELECT USERNAME, PASSWORD FROM USER U WHERE U.USERNAME = '" + uname + "'"`.
-This should be tweaked so to return USERNAME, PASSWORD pair with a known password:
+* The SQL in the JDBCUserDetailsService class is `"SELECT USERNAME, PASSWORD FROM USER U WHERE U.USERNAME = '" + uname + "'"`.
+  This should be tweaked so to return USERNAME, PASSWORD pair with a known password:
 `SELECT USERNAME, PASSWORD FROM USER U WHERE U.USERNAME = '' AND SELECT 'bob','password' --'`
 using below input on login page:
-** username: ' UNION SELECT 'bob' AS USERNAME,'x' AS PASSWORD --
-** password: x
-This makes the code return a UserDetails object with the username (bob) and password (x) values set in the injected SQL snippet.
+  * username: ' UNION SELECT 'bob' AS USERNAME,'x' AS PASSWORD --
+  * password: x
+  This makes the code return a UserDetails object with the username (bob) and password (x) values set in the injected SQL snippet.
+  Exploiting this SQLi vulnerability in the authentication component alice could easily log in as bob.
+*   
