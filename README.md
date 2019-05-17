@@ -60,7 +60,7 @@ public class JDBCAccountService implements AccountService {
             ResultSet resultSet = preparedStatement.executeQuery();
             ...
 ```
-1. Write a JPA based implementation for AccountService 
+2. Write a JPA based implementation for AccountService 
 For example:
 ```
 @Log
