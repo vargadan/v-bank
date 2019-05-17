@@ -53,7 +53,7 @@ Present vulnerabilities:
 
 ## Fix
 * Escape output in *page.tag* and *history.jsp*:
-For JSP please use c:out tag; you may explicitly set the escapeXml to true '<c:out value="${variable}" escapeXml=true />' 
+For JSP please use c:out tag; you may explicitly set the escapeXml to true `<c:out value="${variable}" escapeXml=true />`
 * Validate/encode input in *BankController.doTransfer(...)*
   
 You may see the solution at https://github.com/vargadan/v-bank/tree/exercise2-solution
