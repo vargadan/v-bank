@@ -1,6 +1,6 @@
 # Exercise 2 - XXS 
 
-XSS exercise to help you understand XSS and its mitigations
+Exercise to help you understand XSS and its mitigations
 
 ## Setup and Start Applications
 
@@ -25,7 +25,7 @@ Present vulnerabilities:
   * *message* : `<div ...>${message}</div>`
 * *transfer.jsp* and *BankController.doTransfer(...)* save the transfer details without validation/etc. and *history.jsp* displays them w/o escaping
 
-## Exploit and understand
+## Exploit to understand
 1. Test reflected XSS in login page. You should get an alert pop-up with '1' displayed as the javascript in the request parameter executes: http://vbank.0.0.0.0.xip.io:8080/login?info=%3Cscript%3Ealert(1)%3C/script%3E 
 1. Exploit stored XSS in login page:
    * As Alice send Bob the login link with installs a keylogger by exploiting the vulnerability: 
