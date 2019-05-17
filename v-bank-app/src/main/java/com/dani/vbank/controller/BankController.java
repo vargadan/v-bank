@@ -95,13 +95,13 @@ public class BankController {
         boolean valid = true;
         try {
             validateAccountNo(transaction.getFromAccountNo());
-        } catch(Exception e) {
+        } catch(ValidationException e) {
             modelMap.addAttribute("fromAccountNoMsg", e.getMessage());
             valid = false;
         }
         try {
             validateAccountNo(transaction.getToAccountNo());
-        } catch(Exception e) {
+        } catch(ValidationException e) {
             modelMap.addAttribute("toAccountNoMsg", e.getMessage());
             valid = false;
         }
