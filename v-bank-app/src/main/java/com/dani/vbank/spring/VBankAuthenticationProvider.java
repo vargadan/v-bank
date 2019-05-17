@@ -40,7 +40,7 @@ public class VBankAuthenticationProvider implements AuthenticationProvider {
 
     protected Authentication createSuccessAuthentication(Authentication authentication, UserDetails user) {
         UsernamePasswordAuthenticationToken result = new UsernamePasswordAuthenticationToken(
-                authentication.getPrincipal(), authentication.getCredentials(),
+                user.getUsername(), authentication.getCredentials(),
                 user.getAuthorities());
         result.setDetails(authentication.getDetails());
         return result;
