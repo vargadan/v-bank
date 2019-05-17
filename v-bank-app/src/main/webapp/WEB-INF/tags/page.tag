@@ -42,7 +42,7 @@
         </div>
     <c:if test="${not empty SPRING_SECURITY_LAST_EXCEPTION}">
         <div class="container">
-           <div class="row alert alert-danger" role="alert"><c:out value="${SPRING_SECURITY_LAST_EXCEPTION.message}"/></div>
+           <div class="row alert alert-danger" role="alert"><c:out value="${SPRING_SECURITY_LAST_EXCEPTION.message}" /></div>
         </div>
     </c:if>
     <c:if test="${not empty error}">
@@ -61,7 +61,7 @@
         </div>
     </c:if>
         <div id="body" class="container">
-            <h2>${title}</h2>
+            <h2 id="title">${title}</h2>
             <jsp:doBody/>
         </div>
         <div class="container-fluid">
