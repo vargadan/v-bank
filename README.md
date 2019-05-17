@@ -4,8 +4,8 @@ XSS exercise to help ypu understand XSS and its mitigations
 
 ## Setup and Start Applications
 
-1. check out exercise1 
-   * from command line: 'git checkout exercise1'
+1. check out exercise2 
+   * from command line: 'git checkout exercise2'
 1. start the v-bank-app in debug mode
    * with maven command:'mvn clean spring-boot:run -f ./v-bank-app/pom.xml'
 1. start the attacker-app
