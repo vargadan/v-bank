@@ -2,6 +2,7 @@
 <%@taglib prefix="t" tagdir="/WEB-INF/tags" %>
 <%@taglib prefix="spring" uri="http://www.springframework.org/tags" %>
 <%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@taglib prefix="sec" uri="http://www.springframework.org/security/tags" %>
 <t:page title="Make a transfer from ${param.fromAccountNo}">
     <div class="container">
         <form action="/doTransfer" method="post">
@@ -23,12 +24,10 @@
                     <label for="note">Note:</label>
                     <input id="note" name="note" type="text" value="">
                 </p>
-                <c:if test="${not empty _csrf}">
-                    <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}"/>
-                </c:if>
                 <p>
                     <input type="submit" value="send" class="button"/>
                 </p>
+                <sec:csrfInput />
             </fieldset>
         </form>
     </div>
