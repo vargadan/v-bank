@@ -10,7 +10,10 @@ import org.springframework.stereotype.Component;
 
 import javax.sql.DataSource;
 import java.math.BigDecimal;
-import java.sql.*;
+import java.sql.Connection;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -26,9 +29,7 @@ public class JDBCAccountService implements AccountService {
     public List<AccountDetails> getAccountDetailsForUser(String userName) {
         List<AccountDetails> accountDetailsList = new ArrayList<>();
         try (Connection connection = dataSource.getConnection()) {
-            PreparedStatement preparedStatement = connection.prepareStatement("SELECT * FROM ACCOUNT ACC WHERE ACC.USERNAME  = ?");
-            preparedStatement.setString(1, userName);
-            ResultSet resultSet = preparedStatement.executeQuery();
+            ResultSet resultSet = connection.createStatement().executeQuery("SELECT * FROM ACCOUNT ACC WHERE ACC.USERNAME  = '" + userName + "'");
             while (resultSet.next()) {
                 AccountDetails accountDetails = new AccountDetails(resultSet.getString("ACCOUNT_ID"),
                         resultSet.getString("USERNAME"),
@@ -45,10 +46,9 @@ public class JDBCAccountService implements AccountService {
     @SneakyThrows
     public AccountDetails getAccountDetails(String accountNo) {
         try (Connection connection = dataSource.getConnection()) {
-            PreparedStatement preparedStatement = connection.prepareStatement("SELECT ACCOUNT_ID, USERNAME, BALANCE, CURRENCY " +
-                    "FROM ACCOUNT ACC WHERE ACC.ACCOUNT_ID = ?");
-            preparedStatement.setString(1, accountNo);
-            ResultSet resultSet = preparedStatement.executeQuery();
+            Statement stmt = connection.createStatement();
+            ResultSet resultSet = stmt.executeQuery("SELECT ACCOUNT_ID, USERNAME, BALANCE, CURRENCY " +
+                    "FROM ACCOUNT ACC WHERE ACC.ACCOUNT_ID = '" + accountNo + "'");
             if (resultSet.next()) {
                 AccountDetails accountDetails = new AccountDetails(resultSet.getString("ACCOUNT_ID"),
                         resultSet.getString("USERNAME"),
@@ -68,58 +68,50 @@ public class JDBCAccountService implements AccountService {
     public boolean transfer(String fromAccountId, String toAccountId, BigDecimal amount, String currency, String note) {
         currency = currency.toUpperCase();
 
-            AccountDetails toAccount = getAccountDetails(toAccountId);
-            AccountDetails fromAccount = getAccountDetails(fromAccountId);
-            //if both account exists we execute the transaction
-            if (toAccount != null && fromAccount != null) {
-                //update balance of fromAccount
-                {
-                    BigDecimal newBalance = fromAccount.getBalance().subtract(amount);
-                    updateAccountBalance(fromAccountId, newBalance, currency);
-                }
-                //update balance of toAccount
-                {
-                    BigDecimal newBalance = toAccount.getBalance().add(amount);
-                    updateAccountBalance(toAccountId, newBalance, currency);
-                }
-                // create transaction record
-                {
-                    insertTransaction(fromAccountId, toAccountId, amount, currency, note, true);
-                }
-                return true;
-            } else {
-                // create transaction record
-//            well, let's support only transactions between local accounts
-//                insertTransaction(fromAccountId, toAccountId, amount, currency, note, false);
-                return false;
+        AccountDetails toAccount = getAccountDetails(toAccountId);
+        AccountDetails fromAccount = getAccountDetails(fromAccountId);
+        //if both account exists we execute the transaction
+        if (toAccount != null && fromAccount != null) {
+            //update balance of fromAccount
+            {
+                BigDecimal newBalance = fromAccount.getBalance().subtract(amount);
+                updateAccountBalance(fromAccountId, newBalance, currency);
             }
-    }
-
-    private String ACCOUNT_INSERT_SQL = "INSERT INTO TRANSACTION (FROM_ACCOUNT,TO_ACCOUNT,AMOUNT,CURRENCY,NOTE,EXECUTED) VALUES(?,?,?,?,?,?)";
-
-    private boolean insertTransaction(String fromAccountId, String toAccountId, BigDecimal amount, String currency, String note, boolean executed) throws SQLException {
-        try (Connection connection = dataSource.getConnection()) {
-            PreparedStatement preparedStatement = connection.prepareStatement(ACCOUNT_INSERT_SQL);
-            preparedStatement.setString(1,fromAccountId );
-            preparedStatement.setString(2, toAccountId);
-            preparedStatement.setBigDecimal(3, amount);
-            preparedStatement.setString(4, currency);
-            preparedStatement.setString(5, note);
-            preparedStatement.setBoolean(6, executed);
-            return preparedStatement.execute();
+            //update balance of toAccount
+            {
+                BigDecimal newBalance = toAccount.getBalance().add(amount);
+                updateAccountBalance(toAccountId, newBalance, currency);
+            }
+            // create transaction record
+            {
+                insertTransaction(fromAccountId, toAccountId, amount, currency, note, false);
+            }
+            return true;
+        } else {
+            // create transaction record
+            insertTransaction(fromAccountId, toAccountId, amount, currency, note, true);
+            return false;
         }
     }
 
-    private String ACCOUNT_UPDATE_SQL = "UPDATE ACCOUNT SET BALANCE = ? WHERE ACCOUNT_ID = ? AND CURRENCY= ?";
+    private boolean insertTransaction(String fromAccountId, String toAccountId, BigDecimal amount, String currency, String note, boolean pending) throws SQLException {
+        try (Connection connection = dataSource.getConnection()) {
+            StringBuilder insert = new StringBuilder("INSERT INTO TRANSACTION (FROM_ACCOUNT,TO_ACCOUNT,AMOUNT,CURRENCY,NOTE,EXECUTED) VALUES('")
+                    .append(fromAccountId).append("','").append(toAccountId).append("',")
+                    .append(amount).append(",'").append(currency).append("','")
+                    .append(note).append("',").append(!pending).append(")");
+            log.info("SQL creating transaction : " + insert.toString());
+            return connection.createStatement().execute(insert.toString());
+        }
+    }
 
     private boolean updateAccountBalance(String accountId, BigDecimal amount, String currency) throws SQLException {
         try (Connection connection = dataSource.getConnection()) {
-//            log.info("SQL updating balance (-) : " + );
-            PreparedStatement preparedStatement = connection.prepareStatement(ACCOUNT_UPDATE_SQL);
-            preparedStatement.setBigDecimal(1, amount);
-            preparedStatement.setString(2, accountId);
-            preparedStatement.setString(3, currency);
-            return preparedStatement.execute();
+            StringBuilder update = new StringBuilder("UPDATE ACCOUNT SET BALANCE = ").append(amount)
+                    .append(" WHERE ACCOUNT_ID = '").append(accountId)
+                    .append("' AND CURRENCY='").append(currency).append("'");
+            log.info("SQL updating balance (-) : " + update.toString());
+            return connection.createStatement().execute(update.toString());
         }
     }
 
@@ -127,11 +119,9 @@ public class JDBCAccountService implements AccountService {
     @SneakyThrows
     public List<Transaction> getTransactionHistory(String accountNo) {
         try (Connection connection = dataSource.getConnection()) {
-            PreparedStatement preparedStatement = connection.prepareStatement("SELECT * FROM" +
-                    " TRANSACTION WHERE FROM_ACCOUNT = ? OR TO_ACCOUNT = ?");
-            preparedStatement.setString(1, accountNo);
-            preparedStatement.setString(2, accountNo);
-            ResultSet resultSet = preparedStatement.executeQuery();
+            Statement stmt = connection.createStatement();
+            ResultSet resultSet = stmt.executeQuery("SELECT * FROM" +
+                    " TRANSACTION WHERE FROM_ACCOUNT = '" + accountNo + "' OR TO_ACCOUNT = '" + accountNo + "'");
             List<Transaction> transactions = new ArrayList<>();
             while (resultSet.next()) {
                 Transaction transaction = new Transaction(
