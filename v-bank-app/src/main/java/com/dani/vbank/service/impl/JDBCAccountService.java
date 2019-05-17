@@ -50,10 +50,10 @@ public class JDBCAccountService implements AccountService {
             ResultSet resultSet = stmt.executeQuery("SELECT ACCOUNT_ID, USERNAME, BALANCE, CURRENCY " +
                     "FROM ACCOUNT ACC WHERE ACC.ACCOUNT_ID = '" + accountNo + "'");
             if (resultSet.next()) {
-                AccountDetails accountDetails = new AccountDetails(resultSet.getString("ACCOUNT_ID"),
-                        resultSet.getString("USERNAME"),
-                        resultSet.getBigDecimal("BALANCE"),
-                        resultSet.getString("CURRENCY"));
+                AccountDetails accountDetails = new AccountDetails(resultSet.getString(1),
+                        resultSet.getString(2),
+                        resultSet.getBigDecimal(3),
+                        resultSet.getString(4));
                 log.info("Account found : " + accountDetails);
                 return accountDetails;
             } else {
@@ -120,17 +120,17 @@ public class JDBCAccountService implements AccountService {
     public List<Transaction> getTransactionHistory(String accountNo) {
         try (Connection connection = dataSource.getConnection()) {
             Statement stmt = connection.createStatement();
-            ResultSet resultSet = stmt.executeQuery("SELECT * FROM" +
+            ResultSet resultSet = stmt.executeQuery("SELECT FROM_ACCOUNT, FROM_ACCOUNT, AMOUNT, CURRENCY, NOTE, EXECUTED  FROM" +
                     " TRANSACTION WHERE FROM_ACCOUNT = '" + accountNo + "' OR TO_ACCOUNT = '" + accountNo + "'");
             List<Transaction> transactions = new ArrayList<>();
             while (resultSet.next()) {
                 Transaction transaction = new Transaction(
-                        resultSet.getString("FROM_ACCOUNT"),
-                        resultSet.getString("TO_ACCOUNT"),
-                        resultSet.getBigDecimal("AMOUNT"),
-                        resultSet.getString("CURRENCY"),
-                        resultSet.getString("NOTE"),
-                        resultSet.getBoolean("EXECUTED")
+                        resultSet.getString(1),
+                        resultSet.getString(2),
+                        resultSet.getBigDecimal(3),
+                        resultSet.getString(4),
+                        resultSet.getString(5),
+                        resultSet.getBoolean(6)
                 );
                 transactions.add(transaction);
             }
