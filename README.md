@@ -135,3 +135,5 @@ public class JPAAccountService implements AccountService {
 
 More on SQL injection prevention:
 https://github.com/OWASP/CheatSheetSeries/blob/master/cheatsheets/SQL_Injection_Prevention_Cheat_Sheet.md
+
+You may see the solution at https://github.com/vargadan/v-bank/tree/exercise3-solution
