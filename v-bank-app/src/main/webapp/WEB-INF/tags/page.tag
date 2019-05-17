@@ -4,7 +4,6 @@
 <%@tag description="Overall Page template" pageEncoding="UTF-8" %>
 <%@ attribute name="title" required="true" %>
 <%@ attribute name="onload" required="false" %>
-<%@ attribute name="title" required="false" %>
 <head>
       <title>${title}</title>
       <meta name="_csrf" content="${_csrf.token}"/>
