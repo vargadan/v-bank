@@ -56,5 +56,56 @@ Present vulnerabilities:
 * Escape output in *page.tag* and *history.jsp*:
 For JSP please use c:out tag; you may explicitly set the escapeXml to true `<c:out value="${variable}" escapeXml=true />`
 * Validate/encode input in *BankController.doTransfer(...)*
+
+```java
+public class BankController {
+
+    ...
+    @RequestMapping(value = "/doTransfer", method = RequestMethod.POST)
+    public ModelAndView doTransfer(@ModelAttribute Transaction transaction, ModelMap model) {
+        //only execute transfer if the transaction data is valid
+        if (validateTransaction(transaction, model)) {
+            //note is free text property, we convert it to HTML encoding so that it is safe(r) to handle 
+            String encodedNote = Encode.forHtmlContent(transaction.getNote());
+            if (accountService.transfer(transaction.getFromAccountNo(), transaction.getToAccountNo(), transaction.getAmount(),
+                    transaction.getCurrency(), encodedNote)) {
+                model.addAttribute("info", "Transaction was completed.");
+            } else {
+                model.addAttribute("info", "Transaction is pending.");
+            }
+            return new ModelAndView("redirect:/", model);
+        } else {
+            return new ModelAndView("transfer", model);
+        }
+    }
+    
+    ...
+
+    private boolean validateTransaction(Transaction transaction, ModelMap modelMap) {
+        boolean valid = true;
+        try {
+            validateAccountNo(transaction.getFromAccountNo());
+        } catch(ValidationException e) {
+            modelMap.addAttribute("fromAccountNoMsg", e.getMessage());
+            valid = false;
+        }
+        try {
+            validateAccountNo(transaction.getToAccountNo());
+        } catch(ValidationException e) {
+            modelMap.addAttribute("toAccountNoMsg", e.getMessage());
+            valid = false;
+        }
+        if (!SUPPORTED_CURRENCIES.contains(transaction.getCurrency())) {
+            modelMap.addAttribute("currencyMsg", "Currency not supported!");
+            valid = false;
+        }
+        if (transaction.getAmount() == null) {
+            modelMap.addAttribute("amountMsg", "Transaction amount is required");
+            valid = false;
+        }
+        return valid;
+    }
+}
+```
   
 You may see the solution at https://github.com/vargadan/v-bank/tree/exercise2-solution
