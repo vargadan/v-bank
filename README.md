@@ -1,6 +1,6 @@
 # Exercise 2 - XXS 
 
-XSS exercise to help ypu understand XSS and its mitigations
+XSS exercise to help you understand XSS and its mitigations
 
 ## Setup and Start Applications
 
