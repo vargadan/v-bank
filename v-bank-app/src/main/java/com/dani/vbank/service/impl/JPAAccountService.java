@@ -23,9 +23,6 @@ public class JPAAccountService implements AccountService {
     @Autowired
     private EntityManager entityManager;
 
-    @Autowired
-    DataSource dataSource;
-
     @Override
     @SneakyThrows
     public List<AccountDetails> getAccountDetailsForUser(String userName) {
@@ -76,13 +73,6 @@ public class JPAAccountService implements AccountService {
         } else {
             // create transaction record
 //            well, let's support only transactions between local accounts
-//            Transaction transaction = new Transaction();
-//            transaction.setFromAccountNo(fromAccountId);
-//            transaction.setToAccountNo(toAccountId);
-//            transaction.setAmount(amount);
-//            transaction.setCurrency(currency);
-//            transaction.setNote(note);
-//            transaction.setExecuted(false);
             return false;
         }
     }
