@@ -6,6 +6,7 @@ import com.dani.vbank.model.AccountDetails;
 import com.dani.vbank.model.Transaction;
 import lombok.SneakyThrows;
 import lombok.extern.java.Log;
+import org.owasp.encoder.Encode;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -60,8 +61,9 @@ public class BankController {
     @RequestMapping(value = "/doTransfer", method = RequestMethod.POST)
     public ModelAndView doTransfer(@ModelAttribute Transaction transaction, ModelMap model) {
         if (validateTransaction(transaction, model)) {
+            String encodedNote = Encode.forHtmlContent(transaction.getNote());
             if (accountService.transfer(transaction.getFromAccountNo(), transaction.getToAccountNo(), transaction.getAmount(),
-                    transaction.getCurrency(), transaction.getNote())) {
+                    transaction.getCurrency(), encodedNote)) {
                 model.addAttribute("info", "Transaction was completed.");
             } else {
                 model.addAttribute("info", "Transaction is pending.");
