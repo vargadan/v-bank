@@ -50,6 +50,7 @@ Present vulnerabilities:
   * encode text input (i.e. with HTML encoding)
   * sanitize text/HTML input (remove potentially dangerous char sequences)
   * escape output (replace control characters into renderable counterparts that are not interpreted as controls/commands by the parser)
+  * use secure content policy headers to control which scripts the browser can execute
 
 ## Fix
 * Escape output in *page.tag* and *history.jsp*:
