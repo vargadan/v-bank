@@ -25,7 +25,7 @@ Present vulnerabilities:
   * *message* : `<div ...>${message}</div>`
 * *transfer.jsp* and *BankController.doTransfer(...)* save the transfer details without validation/etc. and *history.jsp* displays them w/o escaping
 
-##Exploit and understand
+## Exploit and understand
 1. Test reflected XSS in login page. You should get an alert pop-up with '1' displayed as the javascript in the request parameter executes: http://vbank.0.0.0.0.xip.io:8080/login?info=%3Cscript%3Ealert(1)%3C/script%3E 
 1. Exploit stored XSS in login page:
    * As Alice send Bob the login link with installs a keylogger by exploiting the vulnerability: 
@@ -45,10 +45,15 @@ Present vulnerabilities:
      * the malicious javascript (XSS) should be loaded from the database and executed
      * if you refresh the page you sould see the transaction
   
-Mitigations:
+## Mitigations:
   * validate input
   * encode text input (i.e. with HTML encoding)
   * sanitize text/HTML input (remove potentially dangerous char sequences)
   * escape output (replace control characters into renderable counterparts that are not interpreted as controls/commands by the parser)
 
+## Fix
+* Escape output in *page.tag* and *history.jsp*:
+For JSP please use c:out tag; you may explicitly set the escapeXml to true '<c:out value="${variable}" escapeXml=true />' 
+* Validate/encode input in *BankController.doTransfer(...)*
   
+You may see the solution at https://github.com/vargadan/v-bank/tree/exercise2-solution
