@@ -49,7 +49,7 @@ Use the transaction history page to exfiltrate data with SQL injection: http://v
 
 ## Fix
 1. Replace standard JDBC statements with prepared statements in *JDBCUserDetailsService* and *JDBCAccountService* 
-1. Write a JPA based implementation for AccountService 
+For example:
 ```
 public class JDBCAccountService implements AccountService {
    ...
@@ -60,7 +60,8 @@ public class JDBCAccountService implements AccountService {
             ResultSet resultSet = preparedStatement.executeQuery();
             ...
 ```
-
+1. Write a JPA based implementation for AccountService 
+For example:
 ```
 @Log
 @Service
