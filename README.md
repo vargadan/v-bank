@@ -11,7 +11,7 @@ CSRF with this exercise to help you understand CSRF and its most common mitigati
 1. start the attacker-app
    * woth maven command: 'mvn clean spring-boot:run -f ./attacker-app/pom.xml'
 1. open v-bank app and log in 
-   1. open http://vbank.0.0.0.0.xip.io:8080/
+   1. open http://vbank.127.0.0.1.xip.io:8080/
    1. login with as 'bob' with password 'h3ll0bob'
    1. click on send money and wire 1000 CHF to eve:
       * account no: 2-123456-22
@@ -21,7 +21,7 @@ CSRF with this exercise to help you understand CSRF and its most common mitigati
    1. go the transactopm history page by clicking on the account number on the home page. to check the transaction and stay here.
 1. now on behalf of alice we execute a CSRF attack against bob
   1. alice tricks bob into open a web page under her control:
-     * http://attack.0.0.0.0.xip.io:9090/csrf
+     * http://attack.127.0.0.1.xip.io:9090/csrf
      * if you open the page source you see that it contains a pre filled form posted at the url handling transactions forms 
   1. as (little careless) bob open the above page and click on the button
   1. then go back to the transactions page and refresh it you will see that you are 1000 CHF worse off because you have been CSRF-ed
