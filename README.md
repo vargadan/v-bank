@@ -60,6 +60,10 @@ For JSP please use c:out tag; you may explicitly set the escapeXml to true `<c:o
 ```java
 public class BankController {
 
+    private static final Collection<String> SUPPORTED_CURRENCIES = Arrays.asList("CHF", "USD", "GBP", "EUR");
+
+    private static final String ACCOUNT_NO_PATTERN = "^\\d{1}?-\\d{6}?-\\d{2}?$";
+
     ...
     @RequestMapping(value = "/doTransfer", method = RequestMethod.POST)
     public ModelAndView doTransfer(@ModelAttribute Transaction transaction, ModelMap model) {
