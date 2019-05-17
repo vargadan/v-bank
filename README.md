@@ -12,7 +12,7 @@ CSRF with this exercise to help you understand CSRF and its most common mitigati
    * woth maven command: 'mvn clean spring-boot:run -f ./attacker-app/pom.xml'
 1. open v-bank app and log in 
    1. open http://vbank.0.0.0.0.xip.io:8080/
-   1. login with as 'bob' with password 'h3ll0bob
+   1. login with as 'bob' with password 'h3ll0bob'
    1. click on send money and wire 1000 CHF to eve:
       * account no: 2-123456-22
       * amount: 100 
