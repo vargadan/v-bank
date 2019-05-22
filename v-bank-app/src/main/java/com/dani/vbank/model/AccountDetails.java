@@ -1,12 +1,12 @@
 package com.dani.vbank.model;
 
+import com.dani.vbank.model.primitive.AccountNumber;
+import com.dani.vbank.model.primitive.Amount;
+import com.dani.vbank.model.primitive.Currency;
+import com.dani.vbank.model.primitive.Username;
 import lombok.*;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.Table;
-import java.math.BigDecimal;
+import javax.persistence.*;
 
 @Getter
 @Setter
@@ -14,16 +14,22 @@ import java.math.BigDecimal;
 @NoArgsConstructor
 @Entity
 @Table(name = "ACCOUNT")
+@Access(AccessType.FIELD)
 public class AccountDetails {
 
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name="ACCOUNT_ID")
-    private String accountNo;
+    private Long id;
 
-    private String username;
+    @Column(name="ACCOUNT_NO")
+    private AccountNumber accountNo;
 
-    private BigDecimal balance;
+    private Username username;
 
-    private String currency;
+    private Amount balance;
+
+    @Enumerated(EnumType.STRING)
+    private Currency currency;
 
 }

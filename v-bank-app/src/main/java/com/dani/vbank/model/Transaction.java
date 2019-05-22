@@ -1,10 +1,12 @@
 package com.dani.vbank.model;
 
+import com.dani.vbank.model.primitive.AccountNumber;
+import com.dani.vbank.model.primitive.Amount;
+import com.dani.vbank.model.primitive.Currency;
 import lombok.*;
 
 import javax.persistence.*;
 import javax.xml.bind.annotation.*;
-import java.math.BigDecimal;
 
 @AllArgsConstructor
 @NoArgsConstructor
@@ -20,6 +22,9 @@ import java.math.BigDecimal;
         "note"
 })
 @Entity
+@NamedQueries({
+        @NamedQuery(name="transactionsOfAccount", query = "select t from Transaction t where t.fromAccountNo = :accountNo or t.toAccountNo = :accountNo")
+})
 public class Transaction {
 
     @XmlElement(required = false)
@@ -30,17 +35,18 @@ public class Transaction {
 
     @XmlElement(required = true)
     @Column(name = "FROM_ACCOUNT")
-    String fromAccountNo;
+    AccountNumber fromAccountNo;
 
     @XmlElement(required = true)
     @Column(name = "TO_ACCOUNT")
-    String toAccountNo;
+    AccountNumber toAccountNo;
 
     @XmlElement(required = true)
-    BigDecimal amount;
+    Amount amount;
 
     @XmlElement(required = true)
-    String currency;
+    @Enumerated(EnumType.STRING)
+    Currency currency;
 
     @XmlElement(required = true)
     String note;

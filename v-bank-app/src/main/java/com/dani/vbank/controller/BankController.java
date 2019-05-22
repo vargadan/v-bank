@@ -1,6 +1,9 @@
 package com.dani.vbank.controller;
 
+import com.dani.vbank.model.TransactionForm;
 import com.dani.vbank.model.Transactions;
+import com.dani.vbank.model.primitive.AccountNumber;
+import com.dani.vbank.model.primitive.Username;
 import com.dani.vbank.service.AccountService;
 import com.dani.vbank.model.AccountDetails;
 import com.dani.vbank.model.Transaction;
@@ -38,8 +41,8 @@ public class BankController {
     public String home(Model model) {
         String user = request.getRemoteUser();
         List<String> accountIds = new ArrayList<>();
-        List<AccountDetails> accountDetailsList = accountService.getAccountDetailsForUser(user);
-        accountDetailsList.forEach(accountDetails -> accountIds.add(accountDetails.getAccountNo()));
+        List<AccountDetails> accountDetailsList = accountService.getAccountDetailsForUser(new Username(user));
+        accountDetailsList.forEach(accountDetails -> accountIds.add(accountDetails.getAccountNo().getValue()));
         model.addAttribute("accountIds", accountIds);
         return "home";
     }
@@ -47,31 +50,31 @@ public class BankController {
     @RequestMapping("/history")
     public String history(Model model) {
         String accountNo = request.getParameter("accountNo");
-        List<Transaction> transactions = accountService.getTransactionHistory(accountNo);
+        List<Transaction> transactions = accountService.getTransactionHistory(new AccountNumber(accountNo));
         model.addAttribute("transactions", transactions);
         model.addAttribute("accountNo", accountNo);
         return "history";
     }
 
     @RequestMapping(value = "/transfer", method = RequestMethod.GET)
-    public ModelAndView transaction(@ModelAttribute Transaction transaction, Model model) {
-        return new ModelAndView("transfer", "transaction", new Transaction());
+    public ModelAndView transaction(@ModelAttribute TransactionForm transaction, Model model) {
+        return new ModelAndView("transfer", "transaction", new TransactionForm());
     }
 
     @RequestMapping(value = "/doTransfer", method = RequestMethod.POST)
-    public ModelAndView doTransfer(@ModelAttribute Transaction transaction, ModelMap model) {
+    public ModelAndView doTransfer(@ModelAttribute TransactionForm transactionForm, ModelMap model) {
         //only execute transfer if the transaction data is valid
-        if (validateTransaction(transaction, model)) {
-            //note is free text property, we convert it to HTML encoding so that it is safe(r) to handle
-            String encodedNote = Encode.forHtmlContent(transaction.getNote());
-            if (accountService.transfer(transaction.getFromAccountNo(), transaction.getToAccountNo(), transaction.getAmount(),
-                    transaction.getCurrency(), encodedNote)) {
+        try {
+            Transaction transaction = transactionForm.toTransaction();
+            //transaction is always in valid state if constructed due to its domain primitive types.
+            //therefore, no need to validate.
+            if (accountService.transfer(transaction)) {
                 model.addAttribute("info", "Transaction was completed.");
             } else {
                 model.addAttribute("info", "Transaction is pending.");
             }
             return new ModelAndView("redirect:/", model);
-        } else {
+        } catch (ValidationException ve){
             return new ModelAndView("transfer", model);
         }
     }
@@ -86,7 +89,7 @@ public class BankController {
         Transactions transactions = (Transactions) context.createUnmarshaller()
                 .unmarshal(file.getInputStream());
         if (!transactions.getTransactions().isEmpty()) {
-            transactions.getTransactions().forEach(transaction -> doTransfer(transaction, model));
+            transactions.getTransactions().forEach(transaction -> accountService.transfer(transaction));
             int size = transactions.getTransactions().size();
             model.addAttribute("info", size + " transactions uploaded.");
         }
@@ -95,18 +98,6 @@ public class BankController {
 
     private boolean validateTransaction(Transaction transaction, ModelMap modelMap) {
         boolean valid = true;
-        try {
-            validateAccountNo(transaction.getFromAccountNo());
-        } catch(ValidationException e) {
-            modelMap.addAttribute("fromAccountNoMsg", e.getMessage());
-            valid = false;
-        }
-        try {
-            validateAccountNo(transaction.getToAccountNo());
-        } catch(ValidationException e) {
-            modelMap.addAttribute("toAccountNoMsg", e.getMessage());
-            valid = false;
-        }
         if (!SUPPORTED_CURRENCIES.contains(transaction.getCurrency())) {
             modelMap.addAttribute("currencyMsg", "Currency not supported!");
             valid = false;
@@ -120,23 +111,6 @@ public class BankController {
 
     private static final Collection<String> SUPPORTED_CURRENCIES = Arrays.asList("CHF", "USD", "GBP", "EUR");
 
-    private static final String ACCOUNT_NO_PATTERN = "^\\d{1}?-\\d{6}?-\\d{2}?$";
 
-    private void validateAccountNo(String accountNo) throws ValidationException {
-        if (accountNo == null || accountNo.trim().length() == 0) {
-            //it cannot be null
-            throw new ValidationException("Account is required");
-        } else if (accountNo.trim().length() != 11) {
-            //it should be 11 long
-            throw new ValidationException("Account number should be 11 characters long");
-        } else if (!accountNo.matches(ACCOUNT_NO_PATTERN)) {
-            //it has to match patter
-            throw new ValidationException("Account number is in invalid format");
-        } else if (accountService.getAccountDetails(accountNo) == null) {
-            //account does not exist
-            throw new ValidationException("Account does not exists");
-        }
-        //ok all validations passed
-    }
 
 }

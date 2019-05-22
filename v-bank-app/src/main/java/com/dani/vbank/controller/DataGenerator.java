@@ -1,5 +1,9 @@
 package com.dani.vbank.controller;
 
+import com.dani.vbank.model.Transaction;
+import com.dani.vbank.model.primitive.AccountNumber;
+import com.dani.vbank.model.primitive.Amount;
+import com.dani.vbank.model.primitive.Currency;
 import com.dani.vbank.service.AccountService;
 import lombok.SneakyThrows;
 import lombok.extern.java.Log;
@@ -27,7 +31,6 @@ public class DataGenerator {
     @RequestMapping(path = "/addTransactions")
     public void addRandomTransactions(int records) {
         Random r = new Random();
-        List<String> sqls = new ArrayList<>();
         r.ints().filter(i -> i > 0 && i < 10000).limit(records).forEach(
                 amount -> {
                     boolean fromBob = r.nextBoolean();
@@ -35,9 +38,9 @@ public class DataGenerator {
                     String toAccount = fromBob ?  EVE_ACCOUNT_1 : BOB_ACCOUNT_1;
                     String note = amount + " CHF from " + (fromBob ? "Bob to Eve" : "Eve to Bob");
                     log.info(note);
-                    accountService.transfer(fromAccount, toAccount, new BigDecimal(amount), "CHF", note);
+                    Transaction transaction = new Transaction(null, new AccountNumber(fromAccount), new AccountNumber(toAccount), new Amount(new BigDecimal(amount)), Currency.CHF, note, false);
+                    accountService.transfer(transaction);
                 }
         );
     }
-
 }

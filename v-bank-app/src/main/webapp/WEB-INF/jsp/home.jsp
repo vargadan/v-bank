@@ -17,12 +17,12 @@
         };
 
         function getAccountBlock(data) {
-            var trLinkTitle = 'SEND MONEY from ' + data.accountNo;
-            var trLinkHref = '/transfer?fromAccountNo=' + data.accountNo;
+            var trLinkTitle = 'SEND MONEY from ' + data.accountNo.value;
+            var trLinkHref = '/transfer?fromAccountNo=' + data.accountNo.value;
             var accountRow = '<div class="account-block">' +
                 '<div class="account-detail accountNo">Account Number : ' +
-                '<a href="/history?accountNo=' + data.accountNo + '" title="Show Transactions" >' + data.accountNo + '</a><div>' +
-                '<div class="account-detail balance">Balance : ' + data.balance + ' ' + data.currency + '</div>' +
+                '<a href="/history?accountNo=' + data.accountNo.value + '" title="Show Transactions" >' + data.accountNo.value + '</a><div>' +
+                '<div class="account-detail balance">Balance : ' + data.balance.value + ' ' + data.currency + '</div>' +
                 '<a class="button transfer-link" href="' + trLinkHref + '" title="' + trLinkTitle + '">Send Money</a></div>';
             return accountRow;
         }

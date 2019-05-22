@@ -28,7 +28,7 @@ public class PersistenceJPAConfig{
         LocalContainerEntityManagerFactoryBean em
                 = new LocalContainerEntityManagerFactoryBean();
         em.setDataSource(dataSource);
-        em.setPackagesToScan(new String[] { "com.dani.vbank.model" });
+        em.setPackagesToScan(new String[] { "com.dani.vbank" });
         AbstractJpaVendorAdapter vendorAdapter = new HibernateJpaVendorAdapter();
         em.setJpaVendorAdapter(vendorAdapter);
 
