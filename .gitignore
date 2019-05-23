@@ -5,3 +5,10 @@ v-bank-app/target
 v-bank-app/bin
 */.project
 */.classpath
+*.prefs
+attacker-app/.factorypath
+v-bank-app/.factorypath
+v-bank-app/.settings/org.eclipse.core.resources.prefs
+v-bank-app/.factorypath
+attacker-app/.settings/org.eclipse.jdt.core.prefs
+attacker-app/.settings/org.eclipse.jdt.apt.core.prefs
