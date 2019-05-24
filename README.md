@@ -67,14 +67,14 @@ Please download the beolow files to a folder on your local drive:
        (It is also called Blind XXE) 
        
  1. Tasks 
-   * Please configure the XML parser to omit external DTD resources  
-   * Add a lexical parser to preprocess the XML and fail if any entities are found
-   * Hints:
-     * in _BankController.uploadTransactions(...)_:
+    * (1) Configure the XML parser to omit external DTD resources  
+    * (2) Add a lexical parser to preprocess the XML and fail if any entities are found
+    * Hints:
+      * (1) in _BankController.uploadTransactions(...)_:
        ```
        unmarshaller.setProperty(XMLConstants.ACCESS_EXTERNAL_DTD, "false");
        ```
-     * create a new class: 
+      * (2) create a new class: 
        ```
        public class AntiEntityScanner {
        
@@ -95,13 +95,12 @@ Please download the beolow files to a folder on your local drive:
            }
        }
        ```
-     * and in _BankController.uploadTransactions(...)_:
+     * (2) and in _BankController.uploadTransactions(...)_:
        ```
        InputStream incomingXML = file.getInputStream();
        //scan for entities in incoming XML without parsing the content
        AntiEntityScanner.check(incomingXML);
        ```
-        
-    The solution is avaliable in the exercise%-solution branch at https://github.com/vargadan/v-bank/tree/exercise5-solution
-    You may find more on XXE mitifations at https://github.com/OWASP/CheatSheetSeries/blob/master/cheatsheets/XML_External_Entity_Prevention_Cheat_Sheet.md
+The solution is avaliable in the exercise%-solution branch at https://github.com/vargadan/v-bank/tree/exercise5-solution
+You may find more on XXE mitifations at https://github.com/OWASP/CheatSheetSeries/blob/master/cheatsheets/XML_External_Entity_Prevention_Cheat_Sheet.md
     
