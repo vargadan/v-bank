@@ -88,7 +88,7 @@ public class BankController {
             int size = transactions.getTransactions().size();
             model.addAttribute("info", size + " transactions uploaded.");
         }
-        return new ModelAndView("redirect:/history", model);
+        return new ModelAndView("redirect:/", model);
     }
 
     private boolean validateTransaction(Transaction transaction, ModelMap modelMap) {

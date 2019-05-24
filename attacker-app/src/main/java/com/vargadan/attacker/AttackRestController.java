@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.net.URLDecoder;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -18,7 +19,7 @@ public class AttackRestController {
     private static StringBuffer logBuffer = new StringBuffer();
 
     @SneakyThrows
-    private static void handleLogItem(String s) {
+    private static void handleJsonLogItem(String s) {
         ObjectMapper objectMapper = new ObjectMapper();
         Map<String,String> msgMap = objectMapper.readValue(s, HashMap.class);
         log.info("msg = " + s);
@@ -34,10 +35,14 @@ public class AttackRestController {
         if(msg.contains("},{")) {
             for (String smsg : msg.split("},")) {
                 smsg = msg.endsWith("}") ? msg : msg.concat("}");
-                handleLogItem(smsg);
+                handleJsonLogItem(smsg);
             }
+        } else if (msg.contains("{")) {
+            handleJsonLogItem(msg);
         } else {
-            handleLogItem(msg);
+            msg = URLDecoder.decode(msg);
+            log.info("msg = " + msg);
+            logBuffer.append(msg);
         }
         return ResponseEntity.ok(msg);
     }

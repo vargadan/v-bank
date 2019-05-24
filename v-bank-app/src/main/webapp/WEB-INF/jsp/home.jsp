@@ -2,6 +2,7 @@
 <%@taglib prefix="t" tagdir="/WEB-INF/tags" %>
 <%@taglib prefix="spring" uri="http://www.springframework.org/tags" %>
 <%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@taglib prefix="sec" uri="http://www.springframework.org/security/tags" %>
 <t:page t:onload="addAccountRows()" title="V-Bank Home Page">
     <script type="text/javascript">
         function addAccountRow(accountId) {
@@ -42,6 +43,7 @@
             <br/>
             <input type="file" name="file" class="file-upload" />
             <input id="upload-button" type="submit" class="button" value="Send" />
+            <sec:csrfInput />
         </form>
     </div>
 </t:page>

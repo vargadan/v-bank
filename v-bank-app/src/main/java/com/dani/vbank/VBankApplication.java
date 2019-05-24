@@ -16,6 +16,10 @@ import java.util.function.Consumer;
 @Log
 public class VBankApplication {
 
+    static {
+        System.setProperty("javax.xml.accessExternalDTD", "file,http");
+    }
+
     Consumer<String> logConsumer = log::info;
 
     public static void main(String[] args) {

@@ -22,7 +22,8 @@ import java.math.BigDecimal;
 @Entity
 public class Transaction {
 
-    @XmlElement(required = false)
+//    @XmlElement(required = false)
+    @XmlTransient
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "TRANSACTION_ID")

