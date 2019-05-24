@@ -18,10 +18,10 @@ public class AccountNumber implements Serializable {
 
     public AccountNumber(String accountNo, boolean mustExist) {
         this.value = accountNo;
-        if (value == null || value.trim().length() == 0) {
+        if (value == null || value.length() == 0) {
             //it cannot be null
             throw new ValidationException("Account is required");
-        } else if (value.trim().length() != 11) {
+        } else if (value.length() != 11) {
             //it should be 11 long
             throw new ValidationException("Account number should be 11 characters long");
         } else if (!value.matches(ACCOUNT_NO_PATTERN)) {

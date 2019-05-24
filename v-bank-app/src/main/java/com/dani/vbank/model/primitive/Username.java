@@ -12,20 +12,20 @@ public class Username implements Serializable {
     private final String value;
 
     public Username(String username) {
-        if (username == null || username.trim().length() == 0) {
+        this.value = username;
+        if (username == null || username.length() == 0) {
             //it cannot be null
             throw new ValidationException("Username is required");
-        } else if (username.trim().length() < 3) {
+        } else if (username.length() < 3) {
             //it should be 11 long
             throw new ValidationException("Username should be at least 3 characters long");
-        } else if (username.trim().length() > 30) {
+        } else if (username.length() > 30) {
             //it should be 11 long
             throw new ValidationException("Username should be no longer than 30 characters");
         } else if (!username.matches(USERNAME_PATTERN)) {
             //it has to match patter
             throw new ValidationException("Username is in invalid format");
         }
-        this.value = username.trim();
     }
 
     @Override
