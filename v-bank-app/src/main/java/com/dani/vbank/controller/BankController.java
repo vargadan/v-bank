@@ -20,7 +20,9 @@ import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.ValidationException;
+import javax.xml.XMLConstants;
 import javax.xml.bind.JAXBContext;
+import javax.xml.bind.Unmarshaller;
 import java.util.*;
 import java.util.stream.Stream;
 
@@ -81,7 +83,12 @@ public class BankController {
             return new ModelAndView("redirect:/", model);
         }
         JAXBContext context = JAXBContext.newInstance(Transactions.class, Transaction.class);
-        Transactions transactions = (Transactions) context.createUnmarshaller()
+        Unmarshaller unmarshaller = context.createUnmarshaller();
+        //disallow access to all external resources DTD, SCHEME, STYLESHEET
+        unmarshaller.setProperty(XMLConstants.ACCESS_EXTERNAL_DTD, "false");
+        unmarshaller.setProperty(XMLConstants.ACCESS_EXTERNAL_SCHEMA, "false");
+        unmarshaller.setProperty(XMLConstants.ACCESS_EXTERNAL_STYLESHEET, "false");
+        Transactions transactions = (Transactions) unmarshaller
                 .unmarshal(file.getInputStream());
         if (!transactions.getTransactions().isEmpty()) {
             transactions.getTransactions().forEach(transaction -> doTransfer(transaction, model));

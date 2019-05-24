@@ -18,6 +18,7 @@ public class VBankApplication {
 
     static {
         System.setProperty("javax.xml.accessExternalDTD", "file,http");
+        System.setProperty("jdk.xml.maxGeneralEntitySizeLimit", "10000000");
     }
 
     Consumer<String> logConsumer = log::info;
