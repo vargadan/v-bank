@@ -16,7 +16,7 @@ public class AccountNumber implements Serializable {
         this(accountNo, true);
     }
 
-    AccountNumber(String accountNo, boolean validateIfExists) {
+    public AccountNumber(String accountNo, boolean mustExist) {
         if (accountNo == null || accountNo.trim().length() == 0) {
             //it cannot be null
             throw new ValidationException("Account is required");
@@ -27,7 +27,7 @@ public class AccountNumber implements Serializable {
             //it has to match patter
             throw new ValidationException("Account number is in invalid format");
         }
-        else if (validateIfExists) {
+        else if (mustExist) {
             AccountService accountService = AccountService.getInstance();
             if (accountService.getAccountDetails(this) == null) {
                 //account does not exist
