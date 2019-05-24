@@ -17,13 +17,14 @@ public class AccountNumber implements Serializable {
     }
 
     public AccountNumber(String accountNo, boolean mustExist) {
-        if (accountNo == null || accountNo.trim().length() == 0) {
+        this.value = accountNo;
+        if (value == null || value.trim().length() == 0) {
             //it cannot be null
             throw new ValidationException("Account is required");
-        } else if (accountNo.trim().length() != 11) {
+        } else if (value.trim().length() != 11) {
             //it should be 11 long
             throw new ValidationException("Account number should be 11 characters long");
-        } else if (!accountNo.matches(ACCOUNT_NO_PATTERN)) {
+        } else if (!value.matches(ACCOUNT_NO_PATTERN)) {
             //it has to match patter
             throw new ValidationException("Account number is in invalid format");
         }
@@ -34,7 +35,6 @@ public class AccountNumber implements Serializable {
                 throw new ValidationException("Account does not exists");
             }
         }
-        this.value = accountNo;
     }
 
     @Override

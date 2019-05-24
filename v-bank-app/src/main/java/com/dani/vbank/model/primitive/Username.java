@@ -25,7 +25,6 @@ public class Username implements Serializable {
             //it has to match patter
             throw new ValidationException("Username is in invalid format");
         }
-
         this.value = username.trim();
     }
 
