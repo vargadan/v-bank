@@ -75,6 +75,7 @@ public class BankController {
             }
             return new ModelAndView("redirect:/", model);
         } catch (ValidationException ve){
+            model.addAttribute("error", ve.getMessage());
             return new ModelAndView("transfer", model);
         }
     }
