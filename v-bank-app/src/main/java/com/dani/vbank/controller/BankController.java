@@ -84,8 +84,8 @@ public class BankController {
         }
         InputStream incomingXML = file.getInputStream();
         AntiEntityScanner.check(incomingXML);
-        JAXBContext context = JAXBContext.newInstance(Transactions.class, Transaction.class);
-        Unmarshaller unmarshaller = context.createUnmarshaller();
+        JAXBContext jaxbContext = JAXBContext.newInstance(Transactions.class, Transaction.class);
+        Unmarshaller unmarshaller = jaxbContext.createUnmarshaller();
         //disallow access to all external resources DTD, SCHEME, STYLESHEET
         unmarshaller.setProperty(XMLConstants.ACCESS_EXTERNAL_DTD, "false");
         unmarshaller.setProperty(XMLConstants.ACCESS_EXTERNAL_SCHEMA, "false");
