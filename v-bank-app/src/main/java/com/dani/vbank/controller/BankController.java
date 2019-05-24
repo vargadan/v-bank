@@ -4,7 +4,7 @@ import com.dani.vbank.model.Transactions;
 import com.dani.vbank.service.AccountService;
 import com.dani.vbank.model.AccountDetails;
 import com.dani.vbank.model.Transaction;
-import lombok.SneakyThrows;
+import com.dani.vbank.xml.AntiEntityScanner;
 import lombok.extern.java.Log;
 import org.owasp.encoder.Encode;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,8 +23,8 @@ import javax.validation.ValidationException;
 import javax.xml.XMLConstants;
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.Unmarshaller;
+import java.io.InputStream;
 import java.util.*;
-import java.util.stream.Stream;
 
 @Controller
 @Log
@@ -82,6 +82,8 @@ public class BankController {
             model.addAttribute("error", "File is missing.");
             return new ModelAndView("redirect:/", model);
         }
+        InputStream incomingXML = file.getInputStream();
+        AntiEntityScanner.check(incomingXML);
         JAXBContext context = JAXBContext.newInstance(Transactions.class, Transaction.class);
         Unmarshaller unmarshaller = context.createUnmarshaller();
         //disallow access to all external resources DTD, SCHEME, STYLESHEET
@@ -89,7 +91,7 @@ public class BankController {
         unmarshaller.setProperty(XMLConstants.ACCESS_EXTERNAL_SCHEMA, "false");
         unmarshaller.setProperty(XMLConstants.ACCESS_EXTERNAL_STYLESHEET, "false");
         Transactions transactions = (Transactions) unmarshaller
-                .unmarshal(file.getInputStream());
+                .unmarshal(incomingXML);
         if (!transactions.getTransactions().isEmpty()) {
             transactions.getTransactions().forEach(transaction -> doTransfer(transaction, model));
             int size = transactions.getTransactions().size();
@@ -145,3 +147,4 @@ public class BankController {
     }
 
 }
+
