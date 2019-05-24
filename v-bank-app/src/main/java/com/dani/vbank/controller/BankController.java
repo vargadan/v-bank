@@ -83,6 +83,7 @@ public class BankController {
             return new ModelAndView("redirect:/", model);
         }
         InputStream incomingXML = file.getInputStream();
+        //scan for entities in incoming XML without parsing the content
         AntiEntityScanner.check(incomingXML);
         JAXBContext jaxbContext = JAXBContext.newInstance(Transactions.class, Transaction.class);
         Unmarshaller unmarshaller = jaxbContext.createUnmarshaller();
