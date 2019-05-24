@@ -13,7 +13,7 @@ Exercise to help you understand XEE exploits and their mitigations
 ## Brief description of the exercise
 The applications in this scenario are:
 * the vbank application at http://vbank.127.0.0.1.xip.io:8080 
-* the attacker application at http://attack.127.0.0.1.xip.io:9090/, this holds the (malicaiout) XML payloads and DTDs
+* the attacker application at http://attack.127.0.0.1.xip.io:9090/xxe, this holds the (malicaiout) XML payloads and DTDs
   * For the standard XXE scenario:
     * The XML payload: http://attack.127.0.0.1.xip.io:9090/xml/xxe_standard.xml 
   * For the out-of-band XXE scenario
