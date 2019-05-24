@@ -21,6 +21,8 @@ import org.springframework.web.servlet.ModelAndView;
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.ValidationException;
 import javax.xml.bind.JAXBContext;
+import javax.xml.bind.Unmarshaller;
+import java.io.InputStream;
 import java.util.*;
 import java.util.stream.Stream;
 
@@ -80,9 +82,10 @@ public class BankController {
             model.addAttribute("error", "File is missing.");
             return new ModelAndView("redirect:/", model);
         }
-        JAXBContext context = JAXBContext.newInstance(Transactions.class, Transaction.class);
-        Transactions transactions = (Transactions) context.createUnmarshaller()
-                .unmarshal(file.getInputStream());
+        InputStream incomingXML = file.getInputStream();
+        JAXBContext jaxbContext = JAXBContext.newInstance(Transactions.class, Transaction.class);
+        Unmarshaller unmarshaller = jaxbContext.createUnmarshaller();
+        Transactions transactions = (Transactions) unmarshaller.unmarshal(incomingXML);
         if (!transactions.getTransactions().isEmpty()) {
             transactions.getTransactions().forEach(transaction -> doTransfer(transaction, model));
             int size = transactions.getTransactions().size();
