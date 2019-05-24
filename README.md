@@ -101,6 +101,6 @@ Please download the beolow files to a folder on your local drive:
        //scan for entities in incoming XML without parsing the content
        AntiEntityScanner.check(incomingXML);
        ```
-The solution is avaliable in the exercise%-solution branch at https://github.com/vargadan/v-bank/tree/exercise5-solution
+The solution is avaliable in the exercise5-solution branch at https://github.com/vargadan/v-bank/tree/exercise5-solution
 You may find more on XXE mitifations at https://github.com/OWASP/CheatSheetSeries/blob/master/cheatsheets/XML_External_Entity_Prevention_Cheat_Sheet.md
     
