@@ -19,14 +19,16 @@ The Lombok annotations you may find in the code of our examples are, for example
 ## 2. Setup workspace
 
 ### 2.1. Check Out Project from Version Control (GitHub)
+
 You do not need a GitHub account to check the project out!
 The URL of the project on GitHub is: https://github.com/vargadan/v-bank 
+
 Steps:
    1. On the welcome screen you click/select “Check Out From Version Control”
    1. You enter the above URL of the project.
    1. And let IntelliJ download and configure it. 
   
-<Screenshot>
+![Check V-Bank project out from GitHub](doc/images/ProjectSetup1.png "Check V-Bank project out from GitHub")
 
 If IntelliJ asks: “You have checked out an IntelliJ project file: …/pom.xml
 Would you like to open it?”, you should answer “Yes”.
@@ -37,18 +39,35 @@ When it is all done the project has 2 modules:
 *	attacker-app: this is just a placeholder for simple tools and scripts we will use to attack the previous application.
 
 ### 2.2. Create run configurations for the application modules 
+
 The two application modules are v-bank-app and attacker-app in the …/v-bank/v-bank-app and /v-bank/attacker-app folders.
 Click on “Add configuration” in the header button bar.
 
-<Screenshot>
+![Click on 'Add Configuration'](doc/images/ProjectSetup2.png "Click on 'Add Configuration'")
 
 Add a maven configuration with command line “clean spring-boot:run” and with working directory of the home folders of the modules v-bank-app and attacker-app
 (this will clean and build the project before launching the spring-boot application)
-Important: Please pay attention to the home folder of the launch configurations: They should be the folders of the modules ../v-bank-app and /attacker-app; both ending in ‘-app’!
+__Important!__: Please pay attention to the home folder of the launch configurations: They should be the folders of the modules ../v-bank-app and /attacker-app; both ending in ‘-app’!
 
-<Screenshot>
+Add a new __Maven__ configuration:
 
+![Add new Maven configuration](doc/images/ProjectSetup3.png "Add new Maven configuration")
+
+![Setup working directory and command line for the new configuration](doc/images/ProjectSetup4.png "Setup working directory and command line for the new configuration")
+
+__Make sure you have 2 configurations!__:
+
+1. _v-bank-app_ configuration:
+   * working directory: _[PATH_TO_PROJECT_ROOT]/v-bank-app_
+   * command line:      _clean spring-boot:run_ 
+1. _attacker-app_ configuration:
+   * working directory: _[PATH_TO_PROJECT_ROOT]/attacker-app_
+   * command line:      _clean spring-boot:run_
+  
+where _[PATH_TO_PROJECT_ROOT]_ is the path where you checked the v-bank project out.
+  
 ### 2.3. Run the v-bank-app maven run configuration.
+
 This will launch the application on the local port of 8080. However, instead of accessing the running application on localhost we are going to use a xip.io domain (so that our attacks work):
 http://v-bank.127.0.0.1.xip.io:8080/
 The valid username and password are: bob / h3ll0bob 
@@ -58,39 +77,39 @@ you may search for it with CTRL+SHIFT+N(windown/linux) or CMD+SHIFT+N(mac))
 Valid credentials are: bob / h3ll0bob 
 (other credentials can be found in the file data.sql, you may search for it with the hotkey CTLR/CMD+SHIFT+N)
 
-<Screenshot>
+![v-bank-app of the master branch is running](doc/images/ProjectSetup5.png "v-bank-app of the master branch is running")
 
 You can now stop the application (by hitting on the red square).
 
 ### 2.4. Switch to the branch of the first exercise.
 
 The exercises we are going to make are based on branches they are:
--	exercise1: CSRF
--	exercise2: XSS
--	exercise3: SQL injection
--	exercise4: Deep Modelling with Types
--	exercise5: XXE 
+1. exercise1: CSRF
+1. exercise2: XSS
+1. exercise3: SQL injection
+1. exercise4: Deep Modelling with Types
+1. exercise5: XXE 
 
 The solutions of the exercises are in a corresponding branch:
--	exercise1-solution
--	exercise2-solution
--	exercise3-solution
--	exercise4-solution
--	exercise5-solution
+1. exercise1-solution
+1. exercise2-solution
+1. exercise3-solution
+1. exercise4-solution
+1. exercise5-solution
 
 When running the application you should see “git.branch : {banch-name}” in the right- lower corner, so that you can see which branch or exercise the currently running application belongs to. 
 When freshly checked out you should be on the “master” branch.
 
 You can change branch at the following menu item in IntelliJ: VCS -> Git -> Branches
 
-<Screenshot>
+![Check out exercise1 branch 1](doc/images/ProjectSetup6.png "Check out exercise1 branch 1")
 
 Check out exercise1 as “exercise1”. (Please not when you check a branch out for the 1st time it will be amongst the Remote Branches as you can see on the above screenshot). 
 
-<Screenshot>
+![Check out exercise1 branch 2](doc/images/ProjectSetup7.png "Check out exercise1 branch 2")
 
 When you (re)start the application you should see now “git.branch : exercise1” in the right-lower corner as on the screenshot below. 
 
-<Screenshot>
+![v-bank-app of the exercise1 branch is running](doc/images/ProjectSetup8.png "v-bank-app of the exercise1 branch is running")
 
 __Congratulations! You have succesfully set your workspace up!__
