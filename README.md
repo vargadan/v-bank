@@ -114,4 +114,4 @@ When you (re)start the application you should see now â€œgit.branch : exercise1â
 
 ![v-bank-app of the exercise1 branch is running](doc/images/ProjectSetup8.png "v-bank-app of the exercise1 branch is running")
 
-__Congratulations! You have succesfully set your workspace up!__
+__Congratulations! You have set up your workspace succesfully!__
