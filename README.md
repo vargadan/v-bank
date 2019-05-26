@@ -1,25 +1,35 @@
 # Exercise 2 - XXS 
 
-Exercise to help you understand XSS and its mitigations
+This exercise is to help you understand XSS and its mitigation.
 
 ## Setup and Start Applications
 
-1. check out exercise2 
-   * from command line: 'git checkout exercise2'
+1. check out exercise1 
+   * choose branch 'exercise1' in the 'VCS -> Git -> Branches' menu within IntelliJ
 1. start the v-bank-app in debug mode
-   * with maven command:'mvn clean spring-boot:run -f ./v-bank-app/pom.xml'
+   * start the Maven configuration for the "v-bank-app" in DEBUG mode (with the green BUG icon next to the arrow)
+   (you should have created it as described in point __2.2. of the Workspace Setup Instructions__ at https://github.com/vargadan/v-bank/blob/master/README.md)
 1. start the attacker-app
-   * woth maven command: 'mvn clean spring-boot:run -f ./attacker-app/pom.xml'
+   * start the Maven configuration for the "v-bank-app" in DEBUG mode (with the green BUG icon next to the arrow)
+   (you should have created it as described in point __2.2. of the Workspace Setup Instructions__ at https://github.com/vargadan/v-bank/blob/master/README.md)
    
 ## Search for XSS vulnerabilities
 
-Hints:
-* This app is a rather traditional multi page application with not much Ajax/Javascript magic. Therefore it is (mostly) susceptible to source based XSS vulnerabilities.
+XSS is about injecting malicious javascript into the application so that it is executed in the browser within a valis user session.
+Please remember the 2 categorizations of XSS vulnerabilities:
+#### __reflected OR stored XSS__
+1. reflected XSS: the malicious javascript code displayed in the response is included with the corresponding request.
+1. stored or persisted XSS: the malicious javascript is read from a storage (typically database), and has to be saved there first.
+#### __source OR DOM based XSS__
+1. source based: the malicious javascript code is placed into the HTML markup on the server side before sent to the browser/client.
+1. DOM based: it is client side javascript code manipulating the page in the browser through its document-object-model (DOM) that places the malicious code into the page.  
+#### Hints:
+* The v-bank application is a rather traditional multi page web application with little Ajax/Javascript code (there is only a little on the home page).\
+Therefore it is mostly susceptible to source based XSS vulnerabilities.
 * Look for reflected XSS vulnerabilities where request parameters are directly written to the HTML output (page.tag is template used for all pages)
 * Look for stored XSS vulnerabilities where form values are saved without validation/encoding/sanitization and then / or printed without escaping
-
-Present vulnerabilities:
-* page.tag template prints a number of requests parameters into the HTML without escaping:
+#### Present XSS vulnerabilities:
+* *page.tag* template prints a number of requests parameters into the HTML without escaping:
   * *error* : `<div ...>${error}</div>`
   * *info* : `<div ...>${info}</div>` 
   * *message* : `<div ...>${message}</div>`
@@ -48,10 +58,9 @@ Present vulnerabilities:
 ## Mitigations:
   * validate input
   * encode text input (i.e. with HTML encoding)
-  * sanitize text/HTML input (remove potentially dangerous char sequences)
-  * escape output (replace control characters into renderable counterparts that are not interpreted as controls/commands by the parser)
-  * use secure content policy headers to control which scripts the browser can execute
-  * 
+  * sanitize text/HTML input (remove potentially dangerous char sequences) if validation and encoding is not enough or possible (i.e. rich text HTML)
+  * escape output (replace control characters with their encoded counterparts that are not interpreted as controls/commands by the HTML parser and can be displayed)
+  * use Secure-Content-Policy headers to control which scripts the browser can execute (this needs to be supported by the browser as well)
 
 ## Fix
 * Escape output in *page.tag* and *history.jsp*:
@@ -113,7 +122,11 @@ public class BankController {
 }
 ```
   
-You may see the solution at https://github.com/vargadan/v-bank/tree/exercise2-solution
+You may see the solution in the _exercise2-solution_ branch at at https://github.com/vargadan/v-bank/tree/exercise2-solution
+
+The relevant changes are:
+* validation logic in the BankController class in file _BankController.java_
+* the generic page template escaping output in file _page.tag_
 
 More on XSS prevention:
 https://github.com/OWASP/CheatSheetSeries/blob/master/cheatsheets/Cross_Site_Scripting_Prevention_Cheat_Sheet.md
