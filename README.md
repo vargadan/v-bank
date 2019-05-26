@@ -1,6 +1,6 @@
 # Vulnerable E-Bank Demo with Exercises
 
-## Tool Requirements
+## 1. Tool Requirements
 
 *	If you do not have it yet (you can check it with “java -version on the command line”); please download and install the latest Java Development Kit JDK from:
 https://www.oracle.com/technetwork/java/javase/overview/index.html
@@ -16,16 +16,15 @@ The Lombok annotations you may find in the code of our examples are, for example
 *	Burp Suite Community Edition: https://portswigger.net/burp/communitydownload
 
 
-## Setup workspace
+## 2. Setup workspace
 
-1. Check Out Project from Version Control (GitHub)
+### 2.1. Check Out Project from Version Control (GitHub)
 You do not need a GitHub account to check the project out!
 The URL of the project on GitHub is: https://github.com/vargadan/v-bank 
-
 Steps:
-  1. On the welcome screen you click/select “Check Out From Version Control”
-  1. You enter the above URL of the project.
-  1. And let IntelliJ download and configure it. 
+   1. On the welcome screen you click/select “Check Out From Version Control”
+   1. You enter the above URL of the project.
+   1. And let IntelliJ download and configure it. 
   
 <Screenshot>
 
@@ -37,7 +36,7 @@ When it is all done the project has 2 modules:
 *	v-bank-app: it is a very simple or say dummy e-bank application full of vulnerabilities.
 *	attacker-app: this is just a placeholder for simple tools and scripts we will use to attack the previous application.
 
-1. Create run configurations for the application modules 
+### 2.2. Create run configurations for the application modules 
 The two application modules are v-bank-app and attacker-app in the …/v-bank/v-bank-app and /v-bank/attacker-app folders.
 Click on “Add configuration” in the header button bar.
 
@@ -49,7 +48,7 @@ Important: Please pay attention to the home folder of the launch configurations:
 
 <Screenshot>
 
-1. Run the v-bank-app maven run configuration.
+### 2.3. Run the v-bank-app maven run configuration.
 This will launch the application on the local port of 8080. However, instead of accessing the running application on localhost we are going to use a xip.io domain (so that our attacks work):
 http://v-bank.127.0.0.1.xip.io:8080/
 The valid username and password are: bob / h3ll0bob 
@@ -63,7 +62,7 @@ Valid credentials are: bob / h3ll0bob
 
 You can now stop the application (by hitting on the red square).
 
-1. Switch to the branch of the first exercise.
+### 2.4. Switch to the branch of the first exercise.
 
 The exercises we are going to make are based on branches they are:
 -	exercise1: CSRF
@@ -94,4 +93,4 @@ When you (re)start the application you should see now “git.branch : exercise1�
 
 <Screenshot>
 
-Congratulations! You have succesfully set your workspace up!
+__Congratulations! You have succesfully set your workspace up!__
