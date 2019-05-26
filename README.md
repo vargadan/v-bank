@@ -63,6 +63,8 @@ __Make sure you have 2 configurations!__:
 1. _attacker-app_ configuration:
    * working directory: _[PATH_TO_PROJECT_ROOT]/attacker-app_
    * command line:      _clean spring-boot:run_
+
+![You should have 2 configurations](doc/images/ProjectSetup4_2.png "You should have 2 configurations")
   
 where _[PATH_TO_PROJECT_ROOT]_ is the path where you checked the v-bank project out.
   
