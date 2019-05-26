@@ -4,8 +4,8 @@ This exercise is to help you understand XSS and its mitigation.
 
 ## Setup and Start Applications
 
-1. check out exercise1 
-   * choose branch 'exercise1' in the 'VCS -> Git -> Branches' menu within IntelliJ
+1. check out exercise2 
+   * choose branch 'exercise2' in the 'VCS -> Git -> Branches' menu within IntelliJ
 1. start the v-bank-app in debug mode
    * start the Maven configuration for the "v-bank-app" in DEBUG mode (with the green BUG icon next to the arrow)
    (you should have created it as described in point __2.2. of the Workspace Setup Instructions__ at https://github.com/vargadan/v-bank/blob/master/README.md)
