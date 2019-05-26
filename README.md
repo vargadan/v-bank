@@ -1,4 +1,6 @@
-# Vulnerable E-Bank Demo with Exercises
+# Workspace Setup 
+
+This document describes how to set your IntelliJ workspace up for the "Vulnerable E-Bank Demo with Exercises"
 
 ## 1. Tool Requirements
 
