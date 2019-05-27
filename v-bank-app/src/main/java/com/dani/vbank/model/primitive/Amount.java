@@ -9,7 +9,7 @@ public class Amount implements Serializable {
     private final BigDecimal value;
 
     public Amount(String amount) {
-        this.value = new BigDecimal(amount);
+        this(new BigDecimal(amount));
     }
 
     public Amount(BigDecimal amount) {
