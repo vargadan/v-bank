@@ -67,12 +67,15 @@ Therefore it is mostly susceptible to source based XSS vulnerabilities.
     * only if validation and encoding are not possible (i.e. rich text HTML)
     * well, the transaction form has no such field
   * escape output; it replaces control characters with their encoded counterparts that are not interpreted as controls/commands by the HTML parser and can be displayed (i.e. < will be converted to &gt;)
-  * use Secure-Content-Policy headers to control which scripts the browser can execute (this needs to be supported by the browser as well)
+  * use the Content-Security-Policy HTTP header to control which scripts the browser can execute
+    * for example if the browser is sent _Content-Security-Policy_ header with a value _default-src 'self’_ it will only execute scripts from its own web domain (i.e. it will not execute the script from the attack.127.0.0.1 domain).
+    * with the Spring framework you can use the _http.headers().contentSecurityPolic(...)_ method, i.e. _http.headers().contentSecurityPolicy("script-src 'self' 'unsafe-inline'")_
+    * however, the v-bank application uses inline event handlers to run javascript which we do not want to refactor now. this has to be enabled with the 'unsafe-inline' directive for CSP and this leaves the door open for a number of XSS attacks.  
 
-## Fix
+## Apply mitigations
 * Escape output in *page.tag* and *history.jsp*:
 For JSP please use c:out tag; you may explicitly set the escapeXml to true `<c:out value="${variable}" escapeXml=true />`
-* Validate/encode input in *BankController.doTransfer(...)*
+* Validate and encode input in *BankController.doTransfer(...)*
 
 ```java
 public class BankController {
@@ -129,7 +132,7 @@ public class BankController {
 }
 ```
   
-You may see the solution in the _exercise2-solution_ branch at at https://github.com/vargadan/v-bank/tree/exercise2-solution
+You can see the solution in the __exercise2-solution__ branch at at https://github.com/vargadan/v-bank/tree/exercise2-solution
 
 The relevant changes are:
 * validation logic in the BankController class in file _BankController.java_
