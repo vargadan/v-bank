@@ -22,12 +22,12 @@
     </c:if>
     <c:forEach var="transaction" items="${transactions}">
         <tr>
-            <td>${transaction.fromAccountNo}</td>
-            <td>${transaction.toAccountNo}</td>
-            <td>${transaction.amount}</td>
-            <td>${transaction.currency}</td>
-            <td>${transaction.executed}</td>
-            <td>${transaction.note}</td>
+            <td><c:out value="${transaction.fromAccountNo}" escapeXml="true"/></td>
+            <td><c:out value="${transaction.toAccountNo}" escapeXml="true"/></td>
+            <td><c:out value="${transaction.amount}" escapeXml="true"/></td>
+            <td><c:out value="${transaction.currency}" escapeXml="true"/></td>
+            <td><c:out value="${transaction.executed}" escapeXml="true"/></td>
+            <td><c:out value="${transaction.note}" escapeXml="true"/></td>
         </tr>
     </c:forEach>
     </tbody>
