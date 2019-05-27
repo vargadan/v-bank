@@ -67,16 +67,18 @@ Therefore it is mostly susceptible to source based XSS vulnerabilities.
     * only if validation and encoding are not possible (i.e. rich text HTML)
     * well, the transaction form has no such field
   * escape output; it replaces control characters with their encoded counterparts that are not interpreted as controls/commands by the HTML parser and can be displayed (i.e. < will be converted to &gt;)
+    * in Java Server Pages you can escape your output with using the _c:out_ tag `<c:out value="${variable}" escapeXml=true />`
   * use the Content-Security-Policy HTTP header to control which scripts the browser can execute
     * for example if the browser is sent _Content-Security-Policy_ header with a value _default-src 'self’_ it will only execute scripts from its own web domain (i.e. it will not execute the script from the attack.127.0.0.1 domain).
-    * with the Spring framework you can use the _http.headers().contentSecurityPolic(...)_ method, i.e. _http.headers().contentSecurityPolicy("script-src 'self' 'unsafe-inline'")_
-    * however, the v-bank application uses inline event handlers to run javascript which we do not want to refactor now. this has to be enabled with the 'unsafe-inline' directive for CSP and this leaves the door open for a number of XSS attacks.  
+    * with the Spring framework you can use the _HttpSecurity.headers().contentSecurityPolic(...)_ method, i.e. _http.headers().contentSecurityPolicy("script-src 'self' 'unsafe-inline'")_
+    * however, the v-bank application uses inline event handlers to run javascript which we do not want to refactor now. this has to be enabled with the 'unsafe-inline' directive for CSP and this leaves the door open for a number of XSS attacks.
+  * you may alse set the value of the X-XSS-Protection HTTP header to "1; mode=block", however it will only tell the browser not to render scripts that are in the URL, hence it protects from very simple reflected XSS
+    * this can be explicitly enabled in Spring with the _HttpSecurity.headers().xssProtection().xssProtectionEnabled(...)_ method
 
 ## Apply mitigations
-* Escape output in *page.tag* and *history.jsp*:
+* Escape all output in *page.tag* and *history.jsp*:
 For JSP please use c:out tag; you may explicitly set the escapeXml to true `<c:out value="${variable}" escapeXml=true />`
-* Validate and encode input in *BankController.doTransfer(...)*
-
+* Validate and encode input in *BankController.doTransfer(...)* :
 ```java
 public class BankController {
 
@@ -137,6 +139,7 @@ You can see the solution in the __exercise2-solution__ branch at at https://gith
 The relevant changes are:
 * validation logic in the BankController class in file _BankController.java_
 * the generic page template escaping output in file _page.tag_
+* the thistoryransaction  page escaping all output in file _history.jsp_
 
 More on XSS prevention:
 https://github.com/OWASP/CheatSheetSeries/blob/master/cheatsheets/Cross_Site_Scripting_Prevention_Cheat_Sheet.md
