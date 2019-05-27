@@ -46,13 +46,13 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
         //disable CSRF protection
         //http.csrf().disable();
         //disable CORS
-        http.cors().disable();
+        //http.cors().disable();
         //disable XSS proctection
-        http.headers().xssProtection().xssProtectionEnabled(false);
+        http.headers().xssProtection().xssProtectionEnabled(true);
         //disable session fixation procection
         http.sessionManagement().sessionFixation().none();
         //protecting against loading/executing external javascript
-//        http.headers().contentSecurityPolicy("script-src 'self' 'unsafe-inline'");
+        http.headers().contentSecurityPolicy("script-src 'self' 'unsafe-inline'");
     }
 
     @Override
