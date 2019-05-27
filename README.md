@@ -1,4 +1,5 @@
 # Exercise 3 - SQL injection
+
 Exercise to help you understand SQL injection and its mitigation
 
 ## Setup and Start Applications
@@ -15,13 +16,14 @@ Exercise to help you understand SQL injection and its mitigation
 
 ## Look for SQLi vulnerabilities
 Hints:
-* In java classes where database operations are carried out; in such classes an instance of the javax.sql.DataSource is injected:
+* In java classes where database operations are carried out; in such classes an instance of the _javax.sql.DataSource_ is injected:
 ```
     @Autowired
     private DataSource dataSource;
 ```
-  * Please note that this is not an universal property of code vulnerable to SQLi, it only stands for classes in our application that is based on Java and Spring.
-* Where SQL is concatenated in the code before passing it onto the JDBC api.
+  * Please note that this is not an universal property of code vulnerable to SQLi, it only stands for classes in our application that is based on Java (_Datasource_ class) and Spring (_@Autowire_ annotation). 
+    Yet, in java the direct use the the JDBC api, such as the _DataSource_ class above is a good indicator of possible SQLi injection. 
+* Where SQL is concatenated in the code before passing it onto the JDBC (Java DataBase Connectivity) api.
 `connection.createStatement().executeQuery("SELECT * FROM ACCOUNT ACC WHERE ACC.USERNAME  = '" + userName + "'")`
 
 Present vulnerabilities:
