@@ -17,12 +17,17 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
+import org.xml.sax.InputSource;
+import org.xml.sax.XMLReader;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.ValidationException;
 import javax.xml.XMLConstants;
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.Unmarshaller;
+import javax.xml.parsers.SAXParser;
+import javax.xml.parsers.SAXParserFactory;
+import javax.xml.transform.sax.SAXSource;
 import java.io.InputStream;
 import java.util.*;
 
@@ -87,10 +92,22 @@ public class BankController {
         AntiEntityScanner.check(incomingXML);
         JAXBContext jaxbContext = JAXBContext.newInstance(Transactions.class, Transaction.class);
         Unmarshaller unmarshaller = jaxbContext.createUnmarshaller();
+
+        SAXParserFactory spf = SAXParserFactory.newInstance();
+        //well, this is useless against XXE both in out of band
+        spf.setFeature(XMLConstants.FEATURE_SECURE_PROCESSING, true);
+        SAXParser sp = spf.newSAXParser();
+        XMLReader xmlReader = sp.getXMLReader();
+        SAXSource saxSource = new SAXSource(xmlReader, new InputSource(incomingXML));
+
         //disallow access to all external resources DTD, SCHEME, STYLESHEET
-        unmarshaller.setProperty(XMLConstants.ACCESS_EXTERNAL_DTD, "false");
-        unmarshaller.setProperty(XMLConstants.ACCESS_EXTERNAL_SCHEMA, "false");
-        unmarshaller.setProperty(XMLConstants.ACCESS_EXTERNAL_STYLESHEET, "false");
+        //However, there is problem with these: they do not work :-/
+        // at least as of now they just throw an exception even for a good XML w/o DTD and entities.
+        // so it is commented out as well
+//        unmarshaller.setProperty(XMLConstants.ACCESS_EXTERNAL_DTD, "false");
+//        unmarshaller.setProperty(XMLConstants.ACCESS_EXTERNAL_SCHEMA, "false");
+//        unmarshaller.setProperty(XMLConstants.ACCESS_EXTERNAL_STYLESHEET, "false");
+
         Transactions transactions = (Transactions) unmarshaller
                 .unmarshal(incomingXML);
         if (!transactions.getTransactions().isEmpty()) {

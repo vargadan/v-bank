@@ -17,6 +17,6 @@
         <toAccountNo>2-123456-22</toAccountNo>
         <amount>100</amount>
         <currency>CHF</currency>
-        <note>Please check the logs ;)</note>
+        <note>&send; Please check the logs ;)</note>
     </transaction>
 </transactions>
