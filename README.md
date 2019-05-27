@@ -61,6 +61,7 @@ Please download the beolow files to a folder on your local drive:
    * Logged in as bob, please upload xxe_out-of-band.xml
    * 1 new transaction should appear in the history screen: 
      * In the note file of the newly uploaded transaction you should see "...(you fall victim to a Out-of-Band XXE attack!)"
+     * Please check the logs sent to the log service at: http://attack.127.0.0.1.xip.io:9090/viewlog
    * What was happening?
      * ```<!ENTITY victim SYSTEM 'http://service.127.0.0.1.xip.io:9090/victim'>``` entry created a victim entity with the outout of the _victim_ _service_ as its value
      * Then in the_evil.dtd used the %victim; parameter entity (parameter entities are denoted by % and can be reused within the DTD) to create another %send; entity which when evaluated will send the value of %victim; to the log service at http://attack.127.0.0.1.xip.io:9090/log 
@@ -71,15 +72,17 @@ Please download the beolow files to a folder on your local drive:
      * Because the output of the attacked service (normally confidential information) is send to the log service and is not received with the response it is called Out-of-Band XXE. 
        (It is also called Blind XXE) 
        
- 1. Tasks 
-    * (1) Configure the XML parser to omit external DTD resources; so that it cannot load the evil.dtd 
-    * (2) Add a lexical parser to preprocess the XML and fail if any entities are found
+ 1. Tasks
+    * (1) Add a lexical parser to preprocess the XML and fail if any entities are found 
+    * (1) Configure the XML parser to:
+      * disallow external DTDs so that it cannot not load the evil DTD
+      * disallow entities in DTDs so that no system entities can be created within the DTD from files or URLs
+      * allow secure XML processing: https://docs.oracle.com/javase/7/docs/api/javax/xml/XMLConstants.html#FEATURE_SECURE_PROCESSING  
+      __The problem with this approach is that there are lots of XML processor APIs (SAX, DOM, Stax, etc) and implementations (Xalan, Xerces, etc) and each has its own set of supported configuration features. For example, 
+      with the current configuration I could not set any property on the parser to disallow external DTDs or entities and the SECURE_XML_PROCESSING feature did nothing. Therefore, you need to make sure that
+      the XML stream or file does not contain entities before passed to the XML processor API (you can do it with the lexical parser).__
     * Hints:
-      * (1) in _BankController.uploadTransactions(...)_:
-       ```
-       unmarshaller.setProperty(XMLConstants.ACCESS_EXTERNAL_DTD, "false");
-       ```
-      * (2) create a new class: 
+      * (1) create a new class: 
        ```
        public class AntiEntityScanner {
        
@@ -100,11 +103,12 @@ Please download the beolow files to a folder on your local drive:
            }
        }
        ```
-     * (2) and in _BankController.uploadTransactions(...)_:
+     * (1) and in _BankController.uploadTransactions(...)_:
        ```
        InputStream incomingXML = file.getInputStream();
        //scan for entities in incoming XML without parsing the content
        AntiEntityScanner.check(incomingXML);
        ```
-The solution is avaliable in the exercise5-solution branch at https://github.com/vargadan/v-bank/tree/exercise5-solution
-You may find more on XXE mitifations at https://github.com/OWASP/CheatSheetSeries/blob/master/cheatsheets/XML_External_Entity_Prevention_Cheat_Sheet.md
+The solution is available in the exercise5-solution branch at https://github.com/vargadan/v-bank/tree/exercise5-solution
+\
+You may find more on XXE mitigation at https://github.com/OWASP/CheatSheetSeries/blob/master/cheatsheets/XML_External_Entity_Prevention_Cheat_Sheet.md
