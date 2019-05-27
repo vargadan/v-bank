@@ -2,43 +2,47 @@
 Exercise to help you understand XEE exploits and their mitigations
 
 ## Setup and Start Applications
-
-1. check out exercise5 
-   * from command line: 'git checkout exercise5'
+1. check out exercise2 
+   * choose branch 'exercise2' in the 'VCS -> Git -> Branches' menu within IntelliJ
 1. start the v-bank-app in debug mode
-   * with maven command:'mvn clean spring-boot:run -f ./v-bank-app/pom.xml'
-1. start the attacker-app in debug mode
-   * with maven command:'mvn clean spring-boot:run -f ./attacker-app/pom.xml'
+   * start the Maven configuration for the "v-bank-app" in DEBUG mode (with the green BUG icon next to the arrow)
+   (you should have created it as described in point __2.2. of the Workspace Setup Instructions__ at https://github.com/vargadan/v-bank/blob/master/README.md)
+1. start the attacker-app
+   * start the Maven configuration for the "v-bank-app" in DEBUG mode (with the green BUG icon next to the arrow)
+   (you should have created it as described in point __2.2. of the Workspace Setup Instructions__ at https://github.com/vargadan/v-bank/blob/master/README.md)
    
 ## Brief description of the exercise
 The applications in this scenario are:
-* the vbank application at http://vbank.127.0.0.1.xip.io:8080 
+* the v-bank application at http://vbank.127.0.0.1.xip.io:8080 
 * the attacker application at http://attack.127.0.0.1.xip.io:9090/xxe, this holds the (malicaiout) XML payloads and DTDs
   * For the standard XXE scenario:
     * The XML payload: http://attack.127.0.0.1.xip.io:9090/xml/xxe_standard.xml 
   * For the out-of-band XXE scenario
     * The XML payload: http://attack.127.0.0.1.xip.io:9090/xml/xxe_out-of-band.xml
     * And the DTD: http://attack.127.0.0.1.xip.io:9090/xml/evil.dtd
-* The victim service at: http://service.127.0.0.1.xip.io:9090/victim
-    * This service should normally not be availabe to the client calling the v-bank application. 
-    With the help of the XXE exploit the attacker manages to call the service and:
+* The victim service at: http://service.127.0.0.1.xip.io:9090/victim  
+    * This service should normally not be available to the client calling the v-bank application. 
+    With the help of the XXE exploit the attacker manages to call the service and
       * Standard XXE: Place the victim's output in the processed document and put in the note of resulting transaction.
-      * Out-of-band XXE: Send the victim's output to the logger service at http://attack.127.0.0.1.xip.io:9090/log (whose input can be viewed at http://attack.127.0.0.1.xip.io:9090/viewlog)
+      * Out-of-band XXE: Send the victim's output to the logger service at http://attack.127.0.0.1.xip.io:9090/log (you can see what has been logged at http://attack.127.0.0.1.xip.io:9090/viewlog)
+\
 But first you have to find the XXE vulnerability in the v-bank-app.
 
 ## Look for XXE vulnerabilities
 
-Hint: XXE vulnerabilities are to be found where XML parsing/processing takes place.
+### Hint 
+XXE vulnerabilities are to be found where XML parsing/processing takes place.
 
-Present vulnerabilities: _BankController.uploadTransactions(...)_ where the processing of the uploaded XML from the home page takes place.
+### Present vulnerability 
+_BankController.uploadTransactions(...)_ where the processing of the uploaded XML from the home page takes place.
 
 ## Exploit to understand
 
 For the exploit we will use the XML files downloadable from http://attack.127.0.0.1.xip.io:9090/xxe 
 Please download the beolow files to a folder on your local drive:
-* transactions.xml: Normal payload
-* xxe_call_service.xml: XEE payload calling a service
-* xxe_call_service_out-of-band.xml: XXE payload calling a service and returning results out of band
+* transactions.xml: The normal payload creating 2 transactions
+* xxe_call_service.xml: the XXE payload calling the victim service and parsing its output (which is the confidential data to leak) into the note field of the transaction
+* xxe_call_service_out-of-band.xml: XXE payload also calling the victim service whose output (which is the confidential data to leak) it send to the attacker's log service  
 
 1. Test
    * Login as bob (bob / h3ll0bob) and upload transactions.xml. 
