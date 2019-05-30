@@ -78,7 +78,7 @@ Please download the beolow files to a folder on your local drive:
       * disallow external DTDs so that it cannot not load the evil DTD
       * disallow entities in DTDs so that no system entities can be created within the DTD from files or URLs
       * allow secure XML processing: https://docs.oracle.com/javase/7/docs/api/javax/xml/XMLConstants.html#FEATURE_SECURE_PROCESSING  
-      __The problem with this approach is that there are lots of XML processor APIs (SAX, DOM, Stax, etc) and implementations (Xalan, Xerces, etc) and each has its own set of supported configuration features. For example, 
+      __The problem with this approach is that there are lots of XML processors (SAX, DOM, Stax, etc) and implementations (Xalan, Xerces, etc) and each has its own set of supported configuration features. For example, 
       with the current configuration I could not set any property on the parser to disallow external DTDs or entities and the SECURE_XML_PROCESSING feature did nothing. Therefore, you need to make sure that
       the XML stream or file does not contain entities before passed to the XML processor API (you can do it with the lexical parser).__
     * Hints:
