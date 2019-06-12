@@ -1,6 +1,6 @@
 # Vulnerable E-Bank Demo and Exercises:
 ## Workspace setup
-[doc/setup.md] (doc/setup.md)
+[doc/setup.md](doc/setup.md)
 ## Exercise 1: CSRF
 https://github.com/vargadan/v-bank/blob/exercise1/README.md
 ## Exercise 2: XSS
