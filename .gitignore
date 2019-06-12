@@ -5,3 +5,5 @@ v-bank-app/target
 v-bank-app/bin
 */.project
 */.classpath
+doc/doc.iml
+*.iml
