@@ -1,6 +1,6 @@
 package com.dani.vbank.spring;
 
-import com.dani.vbank.auth.JDBCUserDetailsService;
+import com.dani.vbank.auth.VBankAuthenticationProvider;
 import lombok.extern.java.Log;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
