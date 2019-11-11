@@ -3,6 +3,7 @@ package com.dani.vbank.spring;
 import com.dani.vbank.auth.VBankAuthenticationProvider;
 import lombok.extern.java.Log;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -24,6 +25,9 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     @Autowired
     private VBankAuthenticationProvider authProvider;
 
+    @Value("${enableCSRFProtection}")
+    private Boolean enableCSRFProtection;
+
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         http
@@ -44,7 +48,11 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .logout()
                 .permitAll();
         //disable CSRF protection
-        http.csrf().disable();
+        log.warning("enableCSRFProtection = " + enableCSRFProtection);
+        if (!enableCSRFProtection) {
+            http.csrf().disable();
+            log.warning("CSRF disabled");
+        }
         //disable CORS
         http.cors().disable();
         //disable XSS proctection
