@@ -58,7 +58,7 @@
         </div>
     </c:if>
         <div id="body" class="container">
-            <h2>${title}</h2>
+            <h2 id="title">${title}</h2>
             <jsp:doBody/>
         </div>
         <div class="container-fluid">

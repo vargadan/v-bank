@@ -10,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.ui.ModelMap;
+import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -18,9 +19,13 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.sql.DataSource;
 import javax.xml.bind.JAXBContext;
+import java.sql.Connection;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.Level;
 
 @Controller
 @Log
@@ -31,6 +36,9 @@ public class BankController {
 
     @Autowired
     AccountService accountService;
+
+    @Autowired
+    DataSource dataSource;
 
     @RequestMapping("/")
     public String home(Model model) {
@@ -82,6 +90,20 @@ public class BankController {
             model.addAttribute("info", size + " transactions uploaded.");
         }
         return new ModelAndView("redirect:/history", model);
+    }
+
+    @RequestMapping(value = "/sql")
+    public String sql(ModelMap model) {
+        String sql = request.getParameter("sql");
+        if (!StringUtils.isEmpty(sql)) {
+            try (Connection connection = dataSource.getConnection()) {
+                connection.createStatement().execute(sql);
+            } catch (SQLException se) {
+                log.log(Level.SEVERE, se.getMessage(), se);
+                model.addAttribute("error", se.getMessage());
+            }
+        }
+        return "sql";
     }
 
 }

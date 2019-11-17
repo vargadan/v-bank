@@ -25,7 +25,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     @Autowired
     private VBankAuthenticationProvider authProvider;
 
-    @Value("${enableCSRFProtection}")
+    @Value("${enableCSRFProtection:false}")
     private Boolean enableCSRFProtection;
 
     @Override
