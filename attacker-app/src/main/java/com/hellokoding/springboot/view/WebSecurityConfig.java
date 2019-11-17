@@ -15,14 +15,13 @@ import javax.servlet.http.HttpServletResponse;
 public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Override
-    protected void configure(HttpSecurity http) throws Exception {
-        http.headers().xssProtection().xssProtectionEnabled(false);
+    protected void configure(HttpSecurity httpSecurity) throws Exception {
+        httpSecurity.headers().xssProtection().xssProtectionEnabled(false);
     }
 
     @Override
-    public void configure(WebSecurity web) throws Exception {
-//        web.debug(true);
-        web.httpFirewall(new HttpFirewall() {
+    public void configure(WebSecurity webSecurity) throws Exception {
+        webSecurity.httpFirewall(new HttpFirewall() {
             @Override
             public FirewalledRequest getFirewalledRequest(HttpServletRequest request) throws RequestRejectedException {
                 return new FirewalledRequest(request) {
